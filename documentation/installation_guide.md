@@ -80,8 +80,8 @@ python -m pytest tests -v
 ### Step 4.1: Clone the QA Repository
 ```bash
 cd $HOME/Documents/OsdagQAWork
-git clone https://github.com/rutujakharode6-max/OsdagBridge-Software-Testing.git
-cd OsdagBridge-Software-Testing
+git clone https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing.git
+cd OsdagBridge--Software-Testing
 ```
 
 ### Step 4.2: Install QA Dependencies

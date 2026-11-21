@@ -4,7 +4,7 @@
 **Student / Intern:** Software Testing & QA Intern  
 **Organization:** Structural Engineering Open-Source QA Initiative  
 **Date of Submission:** November 2026  
-**Repository:** [rutujakharode6-max/OsdagBridge-Software-Testing](https://github.com/rutujakharode6-max/OsdagBridge-Software-Testing)  
+**Repository:** [singhrajawatamit7-star/OsdagBridge--Software-Testing](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing)  
 **Application Under Test:** [osdag-admin/OsdagBridge](https://github.com/osdag-admin/OsdagBridge) (v0.1.0)  
 
 ---
@@ -28,9 +28,9 @@ The testing program bridges the gap between software quality engineering and civ
 | :--- | :--- | :--- |
 | Documented Test Cases | 50 | **50 Test Cases (`test_cases.csv`)** |
 | Functional Test Categories | 8 | **8 Categories (Installation, Project, Validation, Design, Results, Reports, Errors, Regression)** |
-| Automated Pytest Suite | > 60 | **77 Automated Tests (`test_results.csv` from real JUnit XML)** |
+| Automated Pytest Suite | > 60 | **105 Automated Tests (`test_results.csv` from real JUnit XML)** |
 | Documented Matrix Pass Rate | > 85% | **90.0% (45 Passed, 2 Failed, 3 Blocked — isolating upstream blockers)** |
-| Defects Identified & Documented | 5+ | **8 Defects Tracked (`OB-BUG-001` to `OB-BUG-008`)** |
+| Defects Identified & Documented | 5+ | **13 Defects Tracked (`OB-BUG-001` to `OB-BUG-013`)** |
 | Average Test Execution Duration | < 0.5s | **0.22 seconds total suite runtime** |
 | Code Compliance Standard | IRC:24 / IS 800 | **Verified against IRC:24-2010 Cl 505-509 & IS 800 Cl 8.2-8.4** |
 

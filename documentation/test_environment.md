@@ -67,20 +67,31 @@ OsdagQAWork/
     ├── app.py                              # Streamlit QA dashboard
     ├── run_tests.py                        # Automated Pytest runner
     ├── test_cases.csv                      # 50 documented test cases
-    ├── test_results.csv                    # 50 test execution records
-    ├── issues.csv                          # 7 documented defects
-    ├── tests/                              # 71 automated Pytest tests
+    ├── test_results.csv                    # 105 test execution records (JUnit XML export)
+    ├── issues.csv                          # 13 documented defects
+    ├── tests/                              # 105 automated Pytest tests
     │   ├── conftest.py                     # Dynamic source path discovery fixture
     │   ├── unit/
     │   ├── integration/
-    │   ├── gui/
+    │   ├── functional/
+    │   ├── ui_simulation/
     │   └── regression/
     └── documentation/
 ```
 
 ---
 
-## 6. Environment Variables
+## 6. Official Application Source & Commit Under Test
+
+The test suite evaluates against:
+- **Official Repository:** `https://github.com/osdag-admin/OsdagBridge`
+- **Verified Commit:** `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74` (`Refactor`)
+- **Author:** `ajmalbabums <ajmalbabums@gmail.com>`
+- **Date:** Sun Dec 7 16:47:46 2025 +0530
+
+---
+
+## 7. Environment Variables
 
 The test configuration detects the official OsdagBridge checkout using the following prioritized resolution logic in `tests/conftest.py`:
 
@@ -96,7 +107,7 @@ The test configuration detects the official OsdagBridge checkout using the follo
 ### Profile A: Local Command-Line Pytest Runner
 ```bash
 python run_tests.py
-# Runs all 71 tests, reports summary in terminal, exit code 0 on success.
+# Runs all 105 tests, reports summary in terminal, exit code 0 on success.
 ```
 
 ### Profile B: HTML Test Report Generation

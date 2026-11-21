@@ -1,12 +1,12 @@
 # 🌉 OsdagBridge – Automated & Manual QA Suite
 ### Software Testing, Input Validation, Structural Verification & Issue Reporting for Plate Girder Road Bridges
 
-[![Python 3.9+](https://img.shields.io/badge/Python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
 [![Testing Framework](https://img.shields.io/badge/Testing-Pytest%209.2-orange.svg)](https://docs.pytest.org/)
 [![Dashboard](https://img.shields.io/badge/Dashboard-Streamlit-red.svg)](https://streamlit.io/)
 [![CI Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-brightgreen.svg)](https://github.com/features/actions)
 [![Standards](https://img.shields.io/badge/Standards-IRC%3A24%20%7C%20IRC%3A6%20%7C%20IS%20800-purple.svg)](https://www.irc.nic.in/)
-[![Status](https://img.shields.io/badge/Status-Submission_Ready-success.svg)](#deployment-guide)
+[![Status](https://img.shields.io/badge/Status-Submission_Ready-success.svg)](#quickstart-setup-instructions)
 
 ---
 
@@ -18,69 +18,63 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 
 | Deliverable | Detail |
 |---|---|
-| **Official Application Integration** | Functional & smoke tests that execute CLI commands, SI unit conversions, code registry lookups, desktop stubs, and isolate upstream blockers (`tests/integration/`) |
-| **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` & `reports/test_results.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
-| **77 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported directly from `reports/test_results/junit.xml` — **74 Passed, 3 XFailed upstream blockers**) |
-| **8 Documented Defects Tracked** | 4 Open upstream blockers in official application, and 4 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
-| **Interactive QA Dashboard** | Streamlit web app reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and calculation verifier |
-| **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes |
+| **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
+| **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
+| **105 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported from `reports/test_results/junit.xml` — **96 Passed, 9 XFailed upstream blockers with strict enforcement**) |
+| **13 Documented Defects Tracked** | 8 Open upstream defects/blockers in official application, and 5 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
+| **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
+| **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
 
-> **Important — `osdagbridge_core`:** This repository contains an independent
-> **QA Reference Utility** (`osdagbridge_core/`) that provides validated bridge
-> calculations for the Streamlit dashboard's verification engine. It is **not**
-> the official OsdagBridge calculation engine and is never presented as such.
+> **Official OsdagBridge Source Verification:**
+> All integration tests evaluate against the genuine official checkout of **[osdag-admin/OsdagBridge](https://github.com/osdag-admin/OsdagBridge)** at **Commit `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`** (`Refactor`).
 
-> **Upstream Blocker Isolation — `osdagbridge.core.models` (OB-BUG-008):** The official
-> `src/osdagbridge/core/__init__.py` executes `from .models import *` but
-> `models.py` does not exist in the official repository. This raises
-> `ModuleNotFoundError: No module named 'osdagbridge.core.models'` on any
-> standard attempt to import `osdagbridge.core`. This upstream defect
-> is catalogued in `issues.csv` as **OB-BUG-008**. The integration test suite
-> (`tests/integration/test_plate_girder_pipeline.py`) explicitly asserts this
-> failure condition with `pytest.raises(ModuleNotFoundError)` so the upstream blocker
-> is honestly documented rather than masked by fake module shims or silent skips.
+> **Independent QA Reference Utility (`osdagbridge_core`):**
+> This repository contains an independent **QA Reference Utility** (`osdagbridge_core/`) that provides validated bridge calculations for the Streamlit dashboard's verification engine and reference benchmarking against IRC:24 and IS 800:2007. It is **not** the official OsdagBridge calculation engine and is never presented as such.
+
+> **Confirmed Upstream Blocker — `osdagbridge.core.models` (OB-BUG-008):**
+> In the official repository at commit `2cb7ddc`, `src/osdagbridge/core/__init__.py` line 2 executes `from .models import *`, but `models.py` does not physically exist in `src/osdagbridge/core/`. Standard import `import osdagbridge.core` immediately raises `ModuleNotFoundError: No module named 'osdagbridge.core.models'`. This is catalogued as **OB-BUG-008** and asserted in `tests/integration/test_plate_girder_pipeline.py`.
 
 ---
 
 ## 🏗️ Project Architecture
 
 ```
-                              +------------------------------------------+
-                              |       Official OsdagBridge Source        |
-                              |       (osdag-admin/OsdagBridge)          |
-                              +------------------------------------------+
-                                                    |
-                       +----------------------------+----------------------------+
-                       |                                                         |
-                       v                                                         v
-     +----------------------------------+                   +----------------------------------+
-     |         Manual Testing           |                   |       Automated Pytest Suite     |
-     | - Form navigation & UI inputs    |                   | - Unit tests (models, validator) |
-     | - Desktop bootstrap verification |                   | - Integration (package imports)  |
-     | - IRC:24 benchmark verification  |                   | - UI State Simulation            |
-     | - Visual validation banners      |                   | - Regression tests (OB-BUG-001+) |
-     +----------------------------------+                   +----------------------------------+
-                       |                                                         |
-                       +----------------------------+----------------------------+
-                                                    |
-                                                    v
-                              +------------------------------------------+
-                              |       Defect Tracking & Reports          |
-                              | - test_cases.csv  (50 scenarios)         |
-                              | - test_results.csv (77 executions)       |
-                              | - issues.csv (8 documented defects)      |
-                              | - SVG UI mockups & log artifacts         |
-                              +------------------------------------------+
-                                                    |
-                                                    v
-                              +------------------------------------------+
-                              |     Interactive Streamlit Dashboard      |
-                              |             (app.py)                     |
-                              | - Real-time KPIs from actual CSV data    |
-                              | - Live Pytest subprocess runner          |
-                              | - Bridge Calculation Verification        |
-                              | - Streamlit Community Cloud deployable   |
-                              +------------------------------------------+
+                               +------------------------------------------+
+                               |       Official OsdagBridge Source        |
+                               |    (osdag-admin/OsdagBridge @ 2cb7ddc)   |
+                               +------------------------------------------+
+                                                     |
+                        +----------------------------+----------------------------+
+                        |                                                         |
+                        v                                                         v
+      +----------------------------------+                   +----------------------------------+
+      |         Manual Testing           |                   |       Automated Pytest Suite     |
+      | - Form navigation & UI inputs    |                   | - Unit tests (models, validator) |
+      | - Desktop bootstrap verification |                   | - Integration (package imports)  |
+      | - IRC:24 benchmark verification  |                   | - UI State Simulation            |
+      | - Visual validation banners      |                   | - Regression tests (OB-BUG-001+) |
+      +----------------------------------+                   +----------------------------------+
+                        |                                                         |
+                        +----------------------------+----------------------------+
+                        |
+                        v
+      +-------------------------------------------------------------------------+
+      |                       Defect Tracking & Reports                         |
+      | - test_cases.csv   (50 manual scenarios: 45 Pass, 2 Fail, 3 Blocked)    |
+      | - test_results.csv (105 automated test executions: 96 Pass, 9 XFail)    |
+      | - issues.csv       (13 documented defects with reproducible evidence)   |
+      | - UI Wireframe mockups (reports/screenshots/*.svg)                      |
+      +-------------------------------------------------------------------------+
+                        |
+                        v
+      +-------------------------------------------------------------------------+
+      |                    Interactive Streamlit QA Dashboard                   |
+      |                                (app.py)                                 |
+      | - Real-time KPIs computed from actual CSV telemetry                     |
+      | - Live Pytest subprocess runner with stdout/stderr capture              |
+      | - Independent IRC:24 / IS 800:2007 calculation verification engine      |
+      | - Deployable to Streamlit Community Cloud                               |
+      +-------------------------------------------------------------------------+
 ```
 
 ---
@@ -88,31 +82,33 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 ## 🗂️ Repository Structure
 
 ```
-OsdagBridge-Software-Testing/
+OsdagBridge--Software-Testing/
 ├── .github/
 │   └── workflows/
-│       └── qa.yml                     # Multi-OS CI (Ubuntu & Windows, Python 3.11/3.12)
+│       ├── qa.yml                     # Multi-OS CI (Ubuntu & Windows, Python 3.11/3.12)
+│       └── tests.yml                  # CI workflow alias
 │
-├── .gitignore
-├── pytest.ini                         # Pytest configuration with custom markers
+├── .gitignore                         # Excludes caches, temporary reports, local envs
+├── pytest.ini                         # Pytest configuration with strict markers
 ├── requirements.txt                   # Deployment dependencies
 ├── app.py                             # Streamlit QA Dashboard
-├── run_tests.py                       # Pytest subprocess runner
+├── run_tests.py                       # Automated Pytest runner & report exporter
 ├── README.md
 │
 ├── test_cases.csv                     # 50 documented test cases across 8 categories
-├── test_results.csv                   # 77 execution records (JUnit XML export)
-├── issues.csv                         # Defect tracker with 8 defects & evidence
+├── test_results.csv                   # 105 automated test execution records (JUnit export)
+├── issues.csv                         # 13 documented defects with reproduction evidence
 │
 ├── scripts/
-│   └── export_junit_csv.py            # Converts JUnit XML → test_results.csv
+│   └── export_junit_csv.py            # Converts JUnit XML → test_results.csv with --strict
 │
-├── documentation/                     # Formal QA deliverables
+├── documentation/                     # Formal QA documentation deliverables
 │   ├── installation_guide.md
 │   ├── test_strategy.md
 │   ├── test_plan.md
 │   ├── test_execution_report.md
 │   ├── bug_report_guide.md
+│   ├── bug_report_template.md
 │   ├── internship_summary_report.md
 │   ├── test_environment.md
 │   ├── known_limitations.md
@@ -120,23 +116,35 @@ OsdagBridge-Software-Testing/
 │   └── release_checklist.md
 │
 ├── tests/
-│   ├── conftest.py                    # Shared fixtures, official source resolution
-│   ├── test_repository_layout.py     # Deliverables integrity checks
-│   ├── unit/
-│   │   ├── test_validation.py        # Input validation boundary checks
-│   │   └── test_models.py            # QA reference model unit tests
-│   ├── integration/
-│   │   ├── test_official_application.py   # Official package functional tests
-│   │   └── test_plate_girder_pipeline.py  # Upstream blocker documentation
-│   ├── ui_simulation/
-│   │   └── test_ui_state_simulation.py    # UI state machine simulation tests
-│   └── regression/
-│       └── test_regression.py        # Regression guards for verified defects
+│   ├── conftest.py                    # Session fixtures & CI environment verification
+│   ├── test_repository_layout.py      # Repository integrity & deliverable checks
+│   ├── test_design.py                 # Structural solver verification
+│   ├── test_environment.py           # Python runtime & file existence verification
+│   ├── test_inputs.py                # Input validation & edge cases
+│   ├── test_project.py               # Project JSON serialization & deserialization
+│   ├── test_reports.py               # Markdown & HTML design report verification
+│   ├── functional/                    # End-to-end workflows & code standards
+│   │   ├── test_e2e_workflow.py       # Full input -> sizing -> solver -> report pipeline
+│   │   └── test_irc_standards.py      # IRC:6 vehicle loads, impact factor, deflection
+│   ├── integration/                   # Official OsdagBridge integration
+│   │   ├── test_official_application.py   # CLI entry point, units, IRC stubs, desktop
+│   │   └── test_plate_girder_pipeline.py  # Plate girder pipeline & upstream blockers
+│   ├── regression/                    # Regression guards for verified bugs
+│   │   └── test_regression.py         # OB-BUG-004 through OB-BUG-007 guards
+│   ├── ui_simulation/                 # UI state machine simulations
+│   │   └── test_ui_state_simulation.py
+│   └── unit/                          # Unit validation & models
+│       ├── test_models.py             # QA bridge data structures
+│       ├── test_validation.py         # Geometric boundary limits
+│       ├── test_unit_conversions.py   # Unit conversion engine tests
+│       ├── test_export_junit_csv.py   # JUnit XML-to-CSV exporter tests
+│       └── test_upstream_scenarios.py # Scenarios 43-48 (null inputs, load scaling, reload)
 │
 ├── test_data/
-│   ├── valid_inputs/                  # Valid 16m/24m plate girder payloads
-│   ├── invalid_inputs/                # Negative fixtures (negative span, type errors)
-│   └── sample_projects/               # IRC:24 reference benchmark projects
+│   ├── valid_inputs/                  # Valid 16m/24m plate girder JSON payloads
+│   ├── invalid_inputs/                # Negative fixtures (negative span, boundary violations)
+│   ├── sample_projects/               # Complete project payloads
+│   └── reference_design_irc.json      # IRC:24 reference benchmark tolerances
 │
 ├── osdagbridge_core/                  # Independent QA Reference Utility (NOT official OsdagBridge)
 │   ├── models.py
@@ -145,9 +153,9 @@ OsdagBridge-Software-Testing/
 │   └── report_generator.py
 │
 └── reports/
-    ├── logs/
-    ├── screenshots/                   # SVG UI mockup & wireframe artifacts (OB-001 through OB-012)
-    └── test_results/                  # JUnit XML & HTML reports
+    ├── logs/                          # Test execution logs
+    ├── screenshots/                   # Visual wireframes and UI mockups (SVG)
+    └── test_results/                  # Generated JUnit XML & HTML reports
 ```
 
 ---
@@ -155,44 +163,33 @@ OsdagBridge-Software-Testing/
 ## 🚀 Quickstart Setup Instructions
 
 ### 1. Prerequisites
-- **Python 3.9+** (`python --version`)
+- **Python 3.11+** (`python --version`)
 - **Git** (`git --version`)
 
-### 2. Clone Both Repositories Side-by-Side
-
+### 2. Set Up the QA Repository
 ```bash
-mkdir OsdagQAWork && cd OsdagQAWork
-
-# Official OsdagBridge application (required for integration tests)
-git clone https://github.com/osdag-admin/OsdagBridge.git
-
-# This QA repository
-git clone https://github.com/rutujakharode6-max/OsdagBridge-Software-Testing.git
-```
-
-### 3. Install the Official Application
-
-```bash
-cd OsdagBridge
-pip install -e .
-cd ..
-```
-
-### 4. Install QA Dependencies
-
-```bash
-cd OsdagBridge-Software-Testing
+git clone https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing.git
+cd OsdagBridge--Software-Testing
 pip install -r requirements.txt
 ```
 
-### 5. Point tests at the Official Source (optional — auto-detected if cloned side-by-side)
-
+### 3. Set Up the Official OsdagBridge Application (For Integration Tests)
+Clone the official OsdagBridge repository side-by-side or into a custom location:
 ```bash
-# Powershell
-$env:OSDAGBRIDGE_ROOT = "..\OsdagBridge"
+# From the parent directory of OsdagBridge--Software-Testing:
+git clone https://github.com/osdag-admin/OsdagBridge.git
+cd OsdagBridge
+pip install -e .
+cd ../OsdagBridge--Software-Testing
+```
 
-# Bash
-export OSDAGBRIDGE_ROOT="../OsdagBridge"
+*(Optional) If cloned to a non-standard location, set `OSDAGBRIDGE_ROOT`:*
+```powershell
+# Windows PowerShell
+$env:OSDAGBRIDGE_ROOT = "C:\path\to\OsdagBridge"
+
+# Linux / macOS Bash
+export OSDAGBRIDGE_ROOT="/path/to/OsdagBridge"
 ```
 
 ---
@@ -200,47 +197,30 @@ export OSDAGBRIDGE_ROOT="../OsdagBridge"
 ## 🧪 Executing the Test Suite
 
 ```bash
-# Run all 77 automated tests
+# Run the complete test suite with automated report export
+python run_tests.py
+
+# Or run pytest directly
 python -m pytest tests -v
 
-# Run with HTML report
-python -m pytest tests --html=reports/test_results/test_report.html --self-contained-html
-
-# Individual suites
-python -m pytest tests/integration -v     # Official application functional & blocker tests
-python -m pytest tests/unit -v            # Validation & model unit tests
-python -m pytest tests/ui_simulation -v   # UI state simulation tests
-python -m pytest tests/regression -v      # Regression guards for verified bugs
+# Run with HTML coverage report
+python -m pytest tests --cov=osdagbridge_core --html=reports/test_results/test_report.html --self-contained-html
 ```
 
-**Regenerate `test_results.csv` from real execution:**
-```bash
-python -m pytest tests --junitxml=reports/test_results/junit.xml
-python scripts/export_junit_csv.py reports/test_results/junit.xml test_results.csv
-```
-
----
-
-## 📊 Interactive QA Dashboard
-
-```bash
-streamlit run app.py
-# Open http://localhost:8501
-```
-
-**Dashboard sections:**
-1. **QA Executive Dashboard** — KPIs computed from real CSV data, pass-rate gauges
-2. **Test Case Repository** — 50 scenarios with filterable category, status, and execution type
-3. **Defect Tracker** — 8 defects with severity/priority filter, evidence images, live append form
-4. **Automated Test Runner** — Triggers real `pytest` subprocess from the browser; shows live stdout
-5. **Bridge Verification Engine** — Powered by `osdagbridge_core` (independent QA reference)
-6. **Documentation Center** — Full-text viewer for all 10 QA deliverables
+### Test Suite Execution Summary (Verified Local Run)
+- **Execution Date:** 2026-11-21
+- **Python Version:** Python 3.13.7 (MSC v.1944 64-bit on Windows 11)
+- **Official OsdagBridge Commit:** `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`
+- **Total Tests Collected:** 105
+- **Passed:** 96
+- **XFailed:** 9 (strictly enforced upstream defects, exit code 0)
+- **Failed / Errors:** 0
 
 ---
 
 ## 📋 Documented Test Cases (50 Scenarios)
 
-The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 scenarios across all functional domains, honestly distinguishing passing features from upstream application defects:
+The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 scenarios across all functional domains, distinguishing passing features from upstream defects:
 
 | Category | Cases | Focus | Execution Summary | Pass Rate |
 |:---|:---:|:---|:---:|:---:|
@@ -254,62 +234,72 @@ The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 sce
 | Regression Testing | 5 | Alpha injection, zero web thickness, Unicode export, impact factor floor | 5 Pass | 100.0% |
 | **Total** | **50** | **Comprehensive QA verification matrix (`test_cases.csv`)** | **45 Pass, 2 Fail, 3 Blocked** | **90.0%** |
 
+*(Calculation: $45 / 50 = 90.0\%$ pass rate; 2 failed and 3 blocked scenarios correspond to open upstream defects in the official application).*
+
 ---
 
-## 🐞 Defect Register
+## 🐞 Defect Register (13 Documented Defects)
 
-Tracked defects in `issues.csv` — detailing upstream defects in `osdag-admin/OsdagBridge` alongside verified regression guards:
+Tracked in `issues.csv` — detailing 8 open upstream defects alongside 5 verified regression guards:
 
-| Bug ID | Title | Severity | Priority | Status | Verification & Evidence |
+| Bug ID | Title | Scope | Severity | Status | Verification & Evidence |
 |:---|:---|:---:|:---:|:---:|:---|
-| **OB-BUG-001** | `python -m osdagbridge.desktop` fails — no `__main__.py` | Critical | P1 | Open | `tests/integration/test_official_application.py::test_official_desktop_missing_main_module_execution` |
-| **OB-BUG-002** | Desktop `main.py` is a console stub — no PySide6 GUI | High | P1 | Open | `tests/integration/test_official_application.py::test_official_desktop_main_start` |
-| **OB-BUG-003** | Preliminary sizing returns raw DTO string `{"depth_m": dto.name}` instead of numeric depth | High | P2 | Open | `tests/integration/test_plate_girder_pipeline.py::test_preliminary_sizing_upstream_defect_reproduction_ob_bug_003` |
-| **OB-BUG-004** | Zero web thickness causes unhandled `ZeroDivisionError` in slenderness check | High | P1 | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_004_zero_web_thickness_division_guard` |
-| **OB-BUG-005** | Numeric input fields accept alphabetic characters during rapid typing | Medium | P2 | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_005_alpha_characters_handling` |
-| **OB-BUG-006** | PDF/HTML export fails silently for Unicode destination paths | Low | P3 | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_006_unicode_path_in_reports` |
-| **OB-BUG-007** | Impact factor drops below IRC:6 statutory floor of 0.10 for spans > 45 m | Medium | P2 | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_007_impact_factor_clamping_for_large_spans` |
-| **OB-BUG-008** | Missing `models.py` in `osdagbridge.core` causes `ModuleNotFoundError` on package import | Critical | P1 | Open | `tests/integration/test_plate_girder_pipeline.py::test_official_core_import_blocked_by_missing_models` |
+| **OB-BUG-001** | `python -m osdagbridge.desktop` fails with `No module named ...__main__` | Official App | Critical | Open | `tests/integration/test_official_application.py::test_official_desktop_missing_main_module_execution` |
+| **OB-BUG-002** | Desktop bootstrap `main.py` is an unlinked console stub lacking Qt GUI | Official App | High | Open | `tests/integration/test_official_application.py::test_official_desktop_launch_message_stub` |
+| **OB-BUG-003** | Preliminary sizing routine returns raw DTO string `{"depth_m": dto.name}` | Official App | High | Open | `tests/integration/test_plate_girder_pipeline.py::test_preliminary_sizing_upstream_defect_reproduction_ob_bug_003` |
+| **OB-BUG-004** | Zero web thickness produces unhandled `ZeroDivisionError` in slenderness | QA Core | High | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_004_zero_web_thickness_division_guard` |
+| **OB-BUG-005** | Numeric inputs permit alphabetic characters during rapid typing | QA Core | Medium | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_005_alpha_characters_handling` |
+| **OB-BUG-006** | PDF report export fails silently when destination path contains Unicode | QA Core | Low | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_006_unicode_path_in_reports` |
+| **OB-BUG-007** | Impact factor for spans > 45m falls below IRC:6 statutory floor of 0.10 | QA Core | Medium | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_007_impact_factor_clamping_for_large_spans` |
+| **OB-BUG-008** | Missing `models.py` in `osdagbridge.core` causes `ModuleNotFoundError` on import | Official App | Critical | Open | `tests/integration/test_plate_girder_pipeline.py::test_official_core_import_blocked_by_missing_models` |
+| **OB-BUG-009** | CLI `analyze_cmd` is a console print stub without structural evaluation | Official App | High | Open | `tests/integration/test_official_application.py::test_official_cli_analyze_produces_engineering_results` |
+| **OB-BUG-010** | Desktop `start()` has no `QApplication` or `QMainWindow` initialization | Official App | High | Open | `tests/integration/test_official_application.py::test_official_desktop_gui_window_instantiation` |
+| **OB-BUG-011** | `to_si` helper is a dummy function returning input without metric conversion | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_units_conversion_metric` |
+| **OB-BUG-012** | `get_vehicle_loads()` in `irc6_2017.py` returns empty list instead of IRC:6 vehicles | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_code_irc6_vehicle_loads_populated` |
+| **OB-BUG-013** | `export_step` writes plain text string instead of ISO-10303-21 STEP structure | Official App | High | Open | `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_cad_export_iso_step_format` |
+
+---
+
+## 📊 Interactive QA Dashboard
+
+Run the dashboard locally:
+```bash
+streamlit run app.py
+```
+
+### Dashboard Features:
+1. **QA Executive Dashboard** — Real-time KPIs calculated from actual CSV telemetry.
+2. **Test Case Repository** — Searchable and filterable matrix of all 50 documented scenarios.
+3. **Defect Tracker** — Defect register with severity, status, steps to reproduce, and interactive defect persistence form.
+4. **Automated Test Runner** — Executes `pytest` subprocess live from the browser and captures terminal output.
+5. **Interactive Bridge Verification** — Powered by `osdagbridge_core`, verifying IRC:24 and IS 800:2007 limits.
+6. **Documentation Center** — Integrated Markdown reader for all formal deliverables.
+
+---
+
+## 🌐 Deployment to Streamlit Community Cloud
+
+1. Fork or push this repository to GitHub.
+2. Log into [share.streamlit.io](https://share.streamlit.io/).
+3. Click **New app** → select:
+   - **Repository:** `singhrajawatamit7-star/OsdagBridge--Software-Testing`
+   - **Branch:** `main`
+   - **Main file path:** `app.py`
+4. Click **Deploy!**
 
 ---
 
 ## ⚙️ Continuous Integration
 
-`.github/workflows/qa.yml` runs on every push and pull request:
-
-- Checks out the QA suite **and** the official `osdag-admin/OsdagBridge` repository
-- Matrix: **Ubuntu + Windows** × **Python 3.11 / 3.12**
-- Installs official application (`pip install -e .`) and QA dependencies
-- Runs `python -m pytest tests --junitxml=...` — **exits non-zero on failure** (no `|| true` suppression)
-- Uploads JUnit XML and HTML reports as build artefacts
-
----
-
-## 🌐 Deployment Guide (Streamlit Community Cloud)
-
-1. Push repository to GitHub (all files committed)
-2. Log into [share.streamlit.io](https://share.streamlit.io/) with GitHub
-3. Click **New app** → select `rutujakharode6-max/OsdagBridge-Software-Testing`, branch `main`, file `app.py`
-4. Click **Deploy**
-
----
-
-## 🎓 Internship Deliverables Checklist
-
-- [x] **Official OsdagBridge integration** — `tests/integration/` functional & blocker tests with honest fail/skip handling
-- [x] **50 documented test cases** — `test_cases.csv` with preconditions, steps, and expected results (90.0% application pass rate, isolating 5 failed/blocked scenarios)
-- [x] **77 automated Pytest tests** — comprehensive suite (74 passed, 3 xfailed); `test_results.csv` regenerated from real JUnit XML
-- [x] **UI state simulation** — desktop & form workflow state machine in `tests/ui_simulation/`
-- [x] **8 reproducible defects** — `issues.csv` with severity, priority, evidence, reproduction steps, and regression guards
-- [x] **77 real execution records** — `test_results.csv` exported by `scripts/export_junit_csv.py`
-- [x] **CI pipeline** — multi-OS GitHub Actions, fails on test failure (no `|| true` suppression)
-- [x] **Streamlit QA dashboard** — dynamic KPIs from live data, live Pytest runner, calculation verifier
-- [x] **10 documentation deliverables** — `documentation/` (plan, strategy, environment, limitations, checklist…)
-- [x] **Honest README** — all metrics traceable to actual artefacts in this repository
+`.github/workflows/qa.yml` executes on every push and pull request across a multi-OS matrix:
+- **Operating Systems:** `ubuntu-latest`, `windows-latest`
+- **Python Runtimes:** `3.11`, `3.12`
+- **Steps:** Checkouts, dependency installation, official source validation, JUnit XML and HTML report generation, and artifact archiving.
+- **Fail-Safe:** CI strictly fails if tests produce unexpected errors or if the official application checkout is missing.
 
 ---
 
 ## 📜 License & Acknowledgments
-- **Project Under Test:** [OsdagBridge](https://github.com/osdag-admin/OsdagBridge) — Osdag initiative, IIT Bombay
-- **Standards:** Indian Roads Congress (IRC:6, IRC:24) and Bureau of Indian Standards (IS 800:2007)
-- **QA Framework:** Open-source educational and portfolio submission under the MIT License
+- **Software Under Test:** [OsdagBridge](https://github.com/osdag-admin/OsdagBridge) — Osdag initiative, IIT Bombay.
+- **Standards:** Indian Roads Congress (IRC:6, IRC:24) and Bureau of Indian Standards (IS 800:2007).
+- **QA Framework:** Open-source educational and portfolio submission under the MIT License.

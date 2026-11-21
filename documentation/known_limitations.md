@@ -90,6 +90,46 @@ This document logs these known limitations, explaining their root cause, technic
 
 ---
 
+### 2.9 Official CLI analyze_cmd Is a Non-Operational Console Stub (OB-BUG-009)
+- **Impact:** High (P2)
+- **Symptom:** Calling `osdagbridge.cli.commands.analyze_cmd(path)` prints `analyze <path>` to stdout and returns `None` without executing bridge analysis, reading the project file, or producing output data structures.
+- **Root Cause:** Placeholder implementation in official CLI module.
+- **Status:** Documented in `issues.csv` as **OB-BUG-009**; strictly verified and guarded via `tests/integration/test_official_application.py::test_official_cli_analyze_produces_engineering_results`.
+
+---
+
+### 2.10 Desktop Entry Point Lacks Qt Application / Window Lifecycle (OB-BUG-010)
+- **Impact:** High (P2)
+- **Symptom:** The official desktop entry point `osdagbridge.desktop.main.start()` does not initialize `PySide6.QtWidgets.QApplication` or construct a window from `main_window.ui`.
+- **Root Cause:** Incomplete desktop UI bootstrapping in official codebase.
+- **Status:** Documented in `issues.csv` as **OB-BUG-010**; verified and guarded via `tests/integration/test_official_application.py::test_official_desktop_gui_window_instantiation`.
+
+---
+
+### 2.11 Official Unit Conversion Helper Does Not Convert Metric Units (OB-BUG-011)
+- **Impact:** Medium (P2)
+- **Symptom:** Calling `to_si(val, unit)` in `osdagbridge.core.utils.units` returns `val` unchanged (e.g. `to_si(1000.0, "mm") == 1000.0` instead of `1.0` meter canonical SI).
+- **Root Cause:** Dummy stub implementation in official utility package.
+- **Status:** Documented in `issues.csv` as **OB-BUG-011**; verified and guarded via `tests/integration/test_official_application.py::test_repro_ob_bug_011_official_units_fails_mm_to_m`.
+
+---
+
+### 2.12 Official IRC:6 Code Utility Returns Empty Vehicle List (OB-BUG-012)
+- **Impact:** Medium (P2)
+- **Symptom:** Calling `get_vehicle_loads()` in `osdagbridge.core.utils.codes.irc6_2017` returns an empty list `[]` instead of vehicle axle weights and spacing configurations for Class 70R and Class A loads.
+- **Root Cause:** Unpopulated stub in code registry module.
+- **Status:** Documented in `issues.csv` as **OB-BUG-012**; verified and guarded via `tests/integration/test_official_application.py::test_repro_ob_bug_012_official_irc6_vehicle_loads_empty`.
+
+---
+
+### 2.13 Official CAD Exporter Generates Plain Text Placeholder Instead of STEP Solid Model (OB-BUG-013)
+- **Impact:** High (P2)
+- **Symptom:** Calling `export_step(dto, path)` in `osdagbridge.core.bridge_types.plate_girder.cad_generator` writes the raw string `STEP placeholder` rather than valid ISO-10303-21 STEP exchange structure.
+- **Root Cause:** pythonOCC solid modeling routines are unlinked stubs in upstream distribution.
+- **Status:** Documented in `issues.csv` as **OB-BUG-013**; verified and guarded via `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_cad_export_iso_step_format`.
+
+---
+
 ## 3. Scope Boundaries & Assumptions
 
 1. **Bridge Type Scope:** Current QA focus is restricted to **Plate Girder Highway Bridges**. Truss bridges, cable-stayed bridges, and composite box girders are scheduled for subsequent test phases.

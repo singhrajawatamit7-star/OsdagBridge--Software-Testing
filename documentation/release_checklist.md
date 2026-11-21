@@ -93,7 +93,7 @@ Rather than granting unconditional release approval while upstream application b
 ---
 
 ## 3. Sign-off & Recommendation
-- **QA Contributor / Intern:** Rutuja Kharode (`rutujakharode6-max`)
+- **QA Contributor / Intern:** QA Testing & Verification Lead (`singhrajawatamit7-star`)
 - **Evaluation Status:** **CONDITIONALLY VERIFIED — QA SUITE PASSING; UPSTREAM APPLICATION BLOCKERS DOCUMENTED**
 - **Deployment Recommendation:** The QA testing framework, test matrix, documentation, and Streamlit analytics dashboard are fully verified and ready for portfolio evaluation. The official application deployment remains blocked upstream until IIT Bombay / Osdag maintains `models.py` and structural solvers.
 - **Date:** November 2026

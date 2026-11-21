@@ -175,8 +175,8 @@ nav = st.sidebar.radio(
 
 st.sidebar.markdown("---")
 num_scenarios = len(df_cases) if not df_cases.empty else 50
-num_pytests = len(df_results) if not df_results.empty else 76
-num_defects = len(df_issues) if not df_issues.empty else 8
+num_pytests = len(df_results) if not df_results.empty else 105
+num_defects = len(df_issues) if not df_issues.empty else 13
 st.sidebar.info(f"""
 **Target Application:** OsdagBridge (IIT Bombay)  
 **Standards:** IRC:24-2010, IRC:6, IS 800  
@@ -480,12 +480,13 @@ elif nav == "⚡ Automated Test Runner":
     st.write("Execute automated regression and integration test suites directly against official OsdagBridge and QA verification modules.")
 
     c_run1, c_run2 = st.columns([2, 1])
-    total_test_count = len(df_results) if not df_results.empty else 76
+    total_test_count = len(df_results) if not df_results.empty else 105
     with c_run1:
         test_scope = st.selectbox(
             "Select Test Suite to Execute",
             [
                 f"🚀 Full Test Suite ({total_test_count} Tests across all suites)",
+                "🌟 Functional End-to-End & IRC Standards (tests/functional)",
                 "🔗 Official Application Integration (tests/integration)",
                 "🧪 Unit Validation & Boundaries (tests/unit)",
                 "🎭 UI State Simulation (tests/ui_simulation)",
@@ -502,6 +503,8 @@ elif nav == "⚡ Automated Test Runner":
     target_args = []
     if "Full Test Suite" in test_scope:
         target_args = ["tests"]
+    elif "Functional End-to-End" in test_scope:
+        target_args = ["tests/functional"]
     elif "Official Application" in test_scope:
         target_args = ["tests/integration"]
     elif "Unit Validation" in test_scope:
