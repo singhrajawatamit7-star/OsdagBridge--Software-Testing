@@ -56,6 +56,13 @@ class ProjectValidator:
     MAX_WEB_DEPTH = 4500.0  # mm
 
     @classmethod
+    def validate(cls, project_or_payload: Any) -> ValidationResult:
+        """Validates either a BridgeProject instance or raw dictionary payload."""
+        if hasattr(project_or_payload, "to_dict"):
+            return cls.validate_project_payload(project_or_payload.to_dict())
+        return cls.validate_project_payload(project_or_payload)
+
+    @classmethod
     def validate_project_payload(cls, data: Dict[str, Any]) -> ValidationResult:
         result = ValidationResult(is_valid=True)
 
