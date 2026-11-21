@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+reports/test_report.html
+reports/test_results/*.html
+reports/test_results/*.xml
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Operating System
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.bak
