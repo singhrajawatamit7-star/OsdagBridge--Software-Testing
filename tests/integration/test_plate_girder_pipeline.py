@@ -1,7 +1,7 @@
 """
 Integration Tests: Official OsdagBridge Plate Girder Pipeline.
 Evaluates official plate girder routines against structural engineering requirements,
-and reports incomplete or placeholder functionality as explicitly blocked / xfailed.
+and reports incomplete or placeholder functionality as explicitly blocked / xfailed (strict=True).
 """
 import importlib.util
 from pathlib import Path
@@ -16,6 +16,7 @@ def _load_module_from_path(module_name: str, file_path: Path):
     return module
 
 
+@pytest.mark.defect_reproduction
 @pytest.mark.integration
 def test_official_core_import_blocked_by_missing_models(official_source, monkeypatch):
     """
@@ -30,6 +31,7 @@ def test_official_core_import_blocked_by_missing_models(official_source, monkeyp
     assert "osdagbridge.core.models" in str(exc_info.value)
 
 
+@pytest.mark.defect_reproduction
 @pytest.mark.integration
 def test_official_plate_girder_pipeline_blocked_by_missing_models(official_source, monkeypatch):
     """
@@ -42,6 +44,7 @@ def test_official_plate_girder_pipeline_blocked_by_missing_models(official_sourc
     assert "osdagbridge.core.models" in str(exc_info.value)
 
 
+@pytest.mark.smoke
 @pytest.mark.integration
 def test_official_plate_girder_files_exist_on_disk(official_source):
     """
@@ -56,11 +59,12 @@ def test_official_plate_girder_files_exist_on_disk(official_source):
     assert (pg_dir / "cad_generator.py").is_file()
 
 
-@pytest.mark.integration
+@pytest.mark.functional
 @pytest.mark.engineering
+@pytest.mark.integration
 @pytest.mark.xfail(
+    strict=True,
     reason="Upstream bug OB-BUG-003: preliminary_sizing returns DTO name string instead of calculated numeric depth in meters",
-    strict=False,
 )
 def test_preliminary_sizing_engineering_validity(official_source):
     """
@@ -87,6 +91,7 @@ def test_preliminary_sizing_engineering_validity(official_source):
 
 
 @pytest.mark.regression
+@pytest.mark.defect_reproduction
 @pytest.mark.integration
 def test_preliminary_sizing_upstream_defect_reproduction_ob_bug_003(official_source):
     """
@@ -106,11 +111,12 @@ def test_preliminary_sizing_upstream_defect_reproduction_ob_bug_003(official_sou
     assert isinstance(result.get("depth_m"), str)
 
 
-@pytest.mark.integration
+@pytest.mark.functional
 @pytest.mark.engineering
+@pytest.mark.integration
 @pytest.mark.xfail(
+    strict=True,
     reason="Upstream blocker OB-BUG-002: Official designer returns placeholder stub {'design': 'ok'} lacking structural limit state calculations",
-    strict=False,
 )
 def test_plate_girder_designer_engineering_checks(official_source):
     """
@@ -134,11 +140,12 @@ def test_plate_girder_designer_engineering_checks(official_source):
     )
 
 
-@pytest.mark.integration
+@pytest.mark.functional
 @pytest.mark.engineering
+@pytest.mark.integration
 @pytest.mark.xfail(
+    strict=True,
     reason="Upstream blocker OB-BUG-002: Official analyser returns placeholder stub {'result': 'ok'} lacking grillage analysis outputs",
-    strict=False,
 )
 def test_plate_girder_analyser_engineering_outputs(official_source):
     """
@@ -161,11 +168,11 @@ def test_plate_girder_analyser_engineering_outputs(official_source):
     )
 
 
-@pytest.mark.functional
+@pytest.mark.smoke
 @pytest.mark.integration
-def test_plate_girder_cad_export(official_source, tmp_path):
+def test_plate_girder_cad_export_smoke(official_source, tmp_path):
     """
-    INT-PG-08: Verifies official CAD step exporter generates export file on disk.
+    INT-PG-08: Smoke test verifying official CAD step exporter generates an export file on disk.
     """
     pg_dir = official_source / "osdagbridge" / "core" / "bridge_types" / "plate_girder"
     dto_mod = _load_module_from_path("official_pg_dto_cad", pg_dir / "dto.py")
@@ -177,3 +184,48 @@ def test_plate_girder_cad_export(official_source, tmp_path):
 
     assert export_path.is_file()
     assert export_path.stat().st_size > 0
+
+
+@pytest.mark.defect_reproduction
+@pytest.mark.integration
+def test_repro_ob_bug_013_official_cad_export_is_placeholder_string(official_source, tmp_path):
+    """
+    Reproduces OB-BUG-013: Official export_step writes raw string 'STEP placeholder'
+    instead of valid CAD geometry conforming to ISO 10303 STEP exchange structure.
+    """
+    pg_dir = official_source / "osdagbridge" / "core" / "bridge_types" / "plate_girder"
+    dto_mod = _load_module_from_path("official_pg_dto_cad_repro", pg_dir / "dto.py")
+    cad_mod = _load_module_from_path("official_pg_cad_repro", pg_dir / "cad_generator.py")
+
+    dto = dto_mod.PlateGirderDTO(name="24m_Highway_Bridge")
+    export_path = tmp_path / "bridge_plate_girder_repro.step"
+    cad_mod.export_step(dto, str(export_path))
+
+    content = export_path.read_text(encoding="utf-8")
+    assert content == "STEP placeholder"
+
+
+@pytest.mark.functional
+@pytest.mark.engineering
+@pytest.mark.integration
+@pytest.mark.xfail(
+    strict=True,
+    reason="Upstream defect OB-BUG-013: Official CAD export generates plain text 'STEP placeholder' instead of valid ISO-10303-21 STEP structure",
+)
+def test_plate_girder_cad_export_iso_step_format(official_source, tmp_path):
+    """
+    Validates that exported CAD file adheres to ISO-10303-21 exchange file format standard.
+    Must contain ISO header tokens (ISO-10303-21, HEADER, DATA).
+    """
+    pg_dir = official_source / "osdagbridge" / "core" / "bridge_types" / "plate_girder"
+    dto_mod = _load_module_from_path("official_pg_dto_cad_val", pg_dir / "dto.py")
+    cad_mod = _load_module_from_path("official_pg_cad_val", pg_dir / "cad_generator.py")
+
+    dto = dto_mod.PlateGirderDTO(name="24m_Highway_Bridge")
+    export_path = tmp_path / "bridge_plate_girder_val.step"
+    cad_mod.export_step(dto, str(export_path))
+
+    content = export_path.read_text(encoding="utf-8")
+    assert "ISO-10303-21;" in content, "Exported file must contain ISO-10303-21 STEP header."
+    assert "HEADER;" in content
+    assert "DATA;" in content

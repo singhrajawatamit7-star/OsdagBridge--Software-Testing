@@ -23,9 +23,10 @@ def project_root():
 
 @pytest.fixture(scope="session")
 def official_root():
+    is_ci = bool(os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS") or os.environ.get("REQUIRE_OFFICIAL_OSDAGBRIDGE"))
     value = os.environ.get("OSDAGBRIDGE_ROOT")
     if not value:
-        # Check standard default locations before failing
+        # Check standard default locations before failing/skipping
         candidates = [
             PROJECT_ROOT.parent / "OsdagBridge",
             Path.home() / "Documents" / "OsdagQAWork" / "OsdagBridge",
@@ -35,29 +36,37 @@ def official_root():
                 if c.is_dir():
                     value = str(c)
                     break
-            except OSError:
+            except (OSError, PermissionError):
                 pass
     if not value:
-        pytest.skip(
+        msg = (
             "Official OsdagBridge checkout not found. "
-            "Clone osdag-admin/OsdagBridge side-by-side or set OSDAGBRIDGE_ROOT to run official integration tests.",
-            allow_module_level=True,
+            "Clone osdag-admin/OsdagBridge side-by-side or set OSDAGBRIDGE_ROOT to run official integration tests."
         )
+        if is_ci:
+            pytest.fail(f"CI Failure: {msg}", pytrace=False)
+        else:
+            pytest.skip(msg, allow_module_level=True)
     root = Path(value).resolve()
     if not root.is_dir():
-        pytest.skip(
-            f"Official repository not found at {root}. "
-            "Set OSDAGBRIDGE_ROOT to a valid OsdagBridge checkout.",
-            allow_module_level=True,
-        )
+        msg = f"Official repository not found at {root}. Set OSDAGBRIDGE_ROOT to a valid OsdagBridge checkout."
+        if is_ci:
+            pytest.fail(f"CI Failure: {msg}", pytrace=False)
+        else:
+            pytest.skip(msg, allow_module_level=True)
     return root
 
 
 @pytest.fixture(scope="session")
 def official_source(official_root):
+    is_ci = bool(os.environ.get("CI") or os.environ.get("GITHUB_ACTIONS") or os.environ.get("REQUIRE_OFFICIAL_OSDAGBRIDGE"))
     source = official_root / "src"
     if not (source / "osdagbridge").is_dir():
-        pytest.skip("Official src/osdagbridge directory is missing from checkout.")
+        msg = "Official src/osdagbridge directory is missing from checkout."
+        if is_ci:
+            pytest.fail(f"CI Failure: {msg}", pytrace=False)
+        else:
+            pytest.skip(msg)
     return source
 
 
