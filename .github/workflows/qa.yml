@@ -45,17 +45,19 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
 
-      - name: Verify official checkout
+      - name: Verify official checkout and initialize report directories
         working-directory: OsdagBridge-Software-Testing
         env:
           OSDAGBRIDGE_ROOT: ${{ github.workspace }}/OsdagBridge
           OSDAGBRIDGE_SRC: ${{ github.workspace }}/OsdagBridge/src
         run: |
-          python -c "import os; from pathlib import Path; p=Path(os.environ['OSDAGBRIDGE_ROOT']); assert (p/'src'/'osdagbridge').is_dir()"
+          python -c "import os; from pathlib import Path; p=Path(os.environ['OSDAGBRIDGE_ROOT']); assert (p/'src'/'osdagbridge').is_dir(), 'Official OsdagBridge checkout missing!'"
+          python -c "from pathlib import Path; Path('reports/test_results').mkdir(parents=True, exist_ok=True); Path('reports/logs').mkdir(parents=True, exist_ok=True)"
 
       - name: Run QA tests
         working-directory: OsdagBridge-Software-Testing
         env:
+          CI: "true"
           OSDAGBRIDGE_ROOT: ${{ github.workspace }}/OsdagBridge
           OSDAGBRIDGE_SRC: ${{ github.workspace }}/OsdagBridge/src
         run: |
@@ -65,7 +67,7 @@ jobs:
         if: always()
         working-directory: OsdagBridge-Software-Testing
         run: |
-          python scripts/export_junit_csv.py reports/test_results/junit.xml test_results.csv
+          python scripts/export_junit_csv.py reports/test_results/junit.xml test_results.csv --strict
 
       - name: Upload QA artifacts
         if: always()
@@ -74,4 +76,6 @@ jobs:
           name: qa-artifacts-${{ matrix.os }}-py${{ matrix.python-version }}
           path: |
             OsdagBridge-Software-Testing/reports/
+            OsdagBridge-Software-Testing/test_results.csv
+            OsdagBridge-Software-Testing/issues.csv
           if-no-files-found: warn

@@ -6,17 +6,27 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 
-def convert_junit_to_csv(xml_path, csv_path):
+def convert_junit_to_csv(xml_path, csv_path, strict=False):
     xml_path = Path(xml_path)
     csv_path = Path(csv_path)
     if not xml_path.exists():
         print(f"Warning: JUnit XML report not found at {xml_path}. Skipping CSV export.")
+        if strict:
+            return 1
         return 0
-    root = ET.parse(xml_path).getroot()
+    try:
+        root = ET.parse(xml_path).getroot()
+    except ET.ParseError as e:
+        print(f"Error parsing JUnit XML file {xml_path}: {e}")
+        if strict:
+            return 1
+        return 0
+
     rows = []
     run_timestamp = datetime.now(timezone.utc).strftime("EXEC-%Y%m%d-%H%M%S")
     run_date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     iso_timestamp = datetime.now(timezone.utc).isoformat()
+
     for case in root.iter("testcase"):
         classname = case.attrib.get("classname", "")
         name = case.attrib.get("name", "")
@@ -32,7 +42,7 @@ def convert_junit_to_csv(xml_path, csv_path):
             remarks = error.attrib.get("message", "Test error")
         elif skipped is not None:
             status = "SKIPPED"
-            remarks = skipped.attrib.get("message", "Test skipped")
+            remarks = skipped.attrib.get("message", "Test skipped / xfailed")
         else:
             status = "PASS"
             remarks = "Pytest completed successfully"
@@ -77,11 +87,14 @@ def convert_junit_to_csv(xml_path, csv_path):
         writer.writeheader()
         writer.writerows(rows)
     print(f"Exported {len(rows)} test records to {csv_path}")
+    return 0
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) < 3:
         raise SystemExit(
-            "Usage: python scripts/export_junit_csv.py input.xml output.csv"
+            "Usage: python scripts/export_junit_csv.py input.xml output.csv [--strict]"
         )
-    convert_junit_to_csv(sys.argv[1], sys.argv[2])
+    strict_flag = "--strict" in sys.argv
+    ret = convert_junit_to_csv(sys.argv[1], sys.argv[2], strict=strict_flag)
+    sys.exit(ret)
