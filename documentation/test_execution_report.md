@@ -45,6 +45,6 @@ The authoritative defect register is `issues.csv`. Keep issue IDs unique and syn
 
 ## GitHub Actions verification (2026-11-22)
 
-The main-branch workflow run [45010909943](https://github.com/singhrajawat7-star/OsdagBridge--Software-Testing/actions/runs/45010909943) completed with success on all four configured jobs: Ubuntu/Python 3.11, Ubuntu/Python 3.12, Windows/Python 3.11 and Windows/Python 3.12. The tested commit was `d6759d22995acea5cf152c88a36c3ef9af42767f`. Any subsequent commit requires checking its own workflow run.
+The main-branch workflow run [45010909943](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions/runs/45010909943) completed with success on all four configured jobs: Ubuntu/Python 3.11, Ubuntu/Python 3.12, Windows/Python 3.11 and Windows/Python 3.12. The tested commit was `d6759d22995acea5cf152c88a36c3ef9af42767f`. Any subsequent commit requires checking its own workflow run.
 
 This CI result is distinct from a fresh local execution of the complete test suite and from manual execution of the official desktop application. The latter two remain outstanding until the operator runs them and records the outputs.
