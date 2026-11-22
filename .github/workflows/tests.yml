@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: osdag-admin/OsdagBridge
+          ref: 2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74
           path: OsdagBridge
 
       - name: Set up Python
