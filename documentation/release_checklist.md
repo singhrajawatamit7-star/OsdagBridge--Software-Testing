@@ -16,7 +16,7 @@
 - [ ] Execute the manual test plan against the real desktop application; mark inaccessible workflows BLOCKED, not PASS.
 - [ ] Replace SVG wireframes/mockups with genuine, dated application screenshots where visual evidence is claimed.
 - [x] Verify the defect register contains unique IDs OB-BUG-001 through OB-BUG-016 and distinguishes official-app defects from QA-reference utility findings.
-- [x] Confirm GitHub Actions succeeded on every configured OS/Python matrix entry for commit `d6759d22995acea5cf152c88a36c3ef9af42767f` (run [45010909943](https://github.com/singhrajawat7-star/OsdagBridge--Software-Testing/actions/runs/45010909943)); re-check after any new commit.
+- [x] Confirm GitHub Actions succeeded on every configured OS/Python matrix entry for commit `d6759d22995acea5cf152c88a36c3ef9af42767f` (run [45010909943](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions/runs/45010909943)); re-check after any new commit.
 - [x] Align documented inventory and defect totals; historical test timestamps are explicitly labelled as historical.
 
 ## Scope and evidence rules
