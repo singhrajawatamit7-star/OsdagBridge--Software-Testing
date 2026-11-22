@@ -61,8 +61,13 @@ def test_pass():
 def test_fail():
     assert 1 == 2
 
-def test_error():
-    raise RuntimeError("probe error")
+@pytest.fixture
+def broken_fixture():
+    # A setup-phase exception is serialized by pytest as a JUnit <error>.
+    raise RuntimeError("fixture setup error")
+
+def test_error(broken_fixture):
+    assert True
 
 @pytest.mark.xfail(strict=True, reason="expected probe xfail")
 def test_xfail():

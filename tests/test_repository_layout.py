@@ -37,7 +37,7 @@ def test_test_results_csv_exists_and_complete(project_root):
         rows = list(reader)
 
     assert len(rows) >= 50, f"Expected 50 execution entries, found {len(rows)}"
-    valid_statuses = {"PASS", "FAIL", "SKIPPED", "BLOCKED", "ERROR"}
+    valid_statuses = {"PASS", "FAIL", "XFAIL", "SKIPPED", "BLOCKED", "ERROR"}
     for row in rows:
         assert row["Status"] in valid_statuses, f"Invalid status: {row['Status']}"
 
