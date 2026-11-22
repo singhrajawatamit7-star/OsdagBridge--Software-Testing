@@ -26,3 +26,6 @@ Thumbs.db
 desktop.ini
 *.swp
 *.bak
+
+# Local checkout of the separately maintained official application source
+/vendor/OsdagBridge-Desktop/
