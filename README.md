@@ -19,7 +19,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 | Deliverable | Detail |
 |---|---|
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
-| **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
+| **Documented Test Cases** | Scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv`). The committed execution matrix is historical until re-executed. |
 | **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is generated from the current JUnit XML; outcome totals must be taken from the latest run, not assumed from committed history) |
 | **16 Documented Defects Tracked** | 12 Open upstream application defects/blockers and 4 QA reference-engine regression findings with reproducible test evidence (`issues.csv`) |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
@@ -218,7 +218,7 @@ python -m pytest tests --cov=osdagbridge_core --html=reports/test_results/test_r
 
 ---
 
-## 📋 Documented Test Cases (50 Scenarios)
+## 📋 Documented Test Cases
 
 The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 scenarios across all functional domains, distinguishing passing features from upstream defects:
 
@@ -232,15 +232,15 @@ The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 sce
 | Report Generation | 5 | Markdown, HTML, compliance table, CSV export, Unicode path writing | 5 Pass | 100.0% |
 | Error Handling | 5 | Missing girder, single-girder error, slenderness warning, corrupted input | 5 Pass | 100.0% |
 | Regression Testing | 5 | Alpha injection, zero web thickness, Unicode export, impact factor floor | 5 Pass | 100.0% |
-| **Total** | **50** | **Comprehensive QA verification matrix (`test_cases.csv`)** | **45 Pass, 2 Fail, 3 Blocked** | **90.0%** |
+| **Total** | **50 records** | **Scenario inventory in `test_cases.csv`** | Historical manual outcomes only; not freshly re-verified | **Not a current pass rate** |
 
-*(Calculation: $45 / 50 = 90.0\%$ pass rate; 2 failed and 3 blocked scenarios correspond to open upstream defects in the official application).*
+*The 45/2/3 manual outcome figures are historical. Do not report them as current execution results without repeating the scenarios and attaching dated evidence.*
 
 ---
 
 ## 🐞 Defect Register (16 Documented Defects)
 
-Tracked in `issues.csv` — 12 open upstream application defects and 4 verified QA reference-engine regression findings:
+Tracked in `issues.csv` — 16 recorded findings across the official application and the separate QA reference utility. Each finding's scope and status are in the register:
 
 | Bug ID | Title | Scope | Severity | Status | Verification & Evidence |
 |:---|:---|:---:|:---:|:---:|:---|
@@ -269,7 +269,7 @@ streamlit run app.py
 
 ### Dashboard Features:
 1. **QA Executive Dashboard** — Real-time KPIs calculated from actual CSV telemetry.
-2. **Test Case Repository** — Searchable and filterable matrix of all 50 documented scenarios.
+2. **Test Case Repository** — Searchable and filterable matrix of the scenarios recorded in `test_cases.csv`.
 3. **Defect Tracker** — Defect register with severity, status, steps to reproduce, and interactive defect persistence form.
 4. **Automated Test Runner** — Executes `pytest` subprocess live from the browser and captures terminal output.
 5. **Interactive Bridge Verification** — Powered by `osdagbridge_core`, verifying IRC:24 and IS 800:2007 limits.
@@ -303,3 +303,13 @@ streamlit run app.py
 - **Software Under Test:** [OsdagBridge](https://github.com/osdag-admin/OsdagBridge) — Osdag initiative, IIT Bombay.
 - **Standards:** Indian Roads Congress (IRC:6, IRC:24) and Bureau of Indian Standards (IS 800:2007).
 - **QA Framework:** Open-source educational and portfolio submission under the MIT License.
+
+
+## Evidence and submission limitations
+
+- Dashboard counts are derived only from the CSV files currently present. They are record counts, not proof that those tests ran during the current session.
+- `test_results.csv` contains historical execution records until regenerated from a fresh JUnit XML report.
+- SVG previews are illustrative/design assets. They are not screenshots of the official OsdagBridge desktop application.
+- Actual desktop/manual execution evidence remains pending. Do not mark a manual scenario PASS without a dated screenshot or equivalent reproducible evidence.
+- GitHub Actions status must be checked on the latest commit before describing the repository as CI-verified.
+- The QA reference utility and official OsdagBridge application are separate test scopes; results must not be combined into one application-quality claim.
