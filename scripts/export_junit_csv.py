@@ -13,7 +13,7 @@ def classify_skipped_case(skipped_element):
     message = skipped_element.attrib.get("message", "Test skipped")
     if skipped_type in {"pytest.xfail", "xfail"} or "xfail" in skipped_type:
         return "XFAIL"
-    if re.match(r"^\\s*xfail(?:\\b|:)", message, flags=re.IGNORECASE):
+    if re.match(r"^\s*xfail(?:\b|:)", message, flags=re.IGNORECASE):
         return "XFAIL"
     return "SKIPPED"
 
