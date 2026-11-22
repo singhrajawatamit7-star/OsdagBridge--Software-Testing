@@ -2,7 +2,7 @@
 
 ## Release decision
 
-**Status: NOT YET RELEASE-APPROVED.** This repository contains useful QA assets, but a clean release requires a fresh local/CI run and evidence review. A passing QA-framework test does not mean the upstream OsdagBridge application is defect-free.
+**Status: CONDITIONALLY VERIFIED QA PORTFOLIO; NOT FULLY RELEASE-APPROVED.** This repository contains useful QA assets, but a clean release requires a fresh local/CI run and evidence review. A passing QA-framework test does not mean the upstream OsdagBridge application is defect-free.
 
 ## Required gates
 
@@ -15,9 +15,9 @@
 - [ ] Review every strict XFAIL against an open upstream defect and verify that unexpected passes fail CI.
 - [ ] Execute the manual test plan against the real desktop application; mark inaccessible workflows BLOCKED, not PASS.
 - [ ] Replace SVG wireframes/mockups with genuine, dated application screenshots where visual evidence is claimed.
-- [ ] Verify each defect ID is unique and every test/document reference points to the correct issue.
-- [ ] Confirm GitHub Actions succeeds on every configured OS/Python matrix entry.
-- [ ] Review all documentation counts and timestamps against the latest run artifacts.
+- [x] Verify the defect register contains unique IDs OB-BUG-001 through OB-BUG-016 and distinguishes official-app defects from QA-reference utility findings.
+- [x] Confirm GitHub Actions succeeded on every configured OS/Python matrix entry for commit `d6759d22995acea5cf152c88a36c3ef9af42767f` (run [45010909943](https://github.com/singhrajawat7-star/OsdagBridge--Software-Testing/actions/runs/45010909943)); re-check after any new commit.
+- [x] Align documented inventory and defect totals; historical test timestamps are explicitly labelled as historical.
 
 ## Scope and evidence rules
 
@@ -30,3 +30,23 @@
 ## Sign-off
 
 Do not use a “Submission Ready” badge until every required gate above has been checked with current evidence. The repository may be submitted as a QA portfolio with its limitations clearly disclosed, but the target application remains conditionally blocked by open upstream issues.
+
+
+## What is complete vs. still required
+
+### Completed in repository review
+
+- [x] Documented 50 scenario records without treating historical outcomes as current manual execution.
+- [x] Documented all 16 findings and clarified the 12 official-app defects versus 4 QA-reference utility findings.
+- [x] Recorded the successful four-job GitHub Actions matrix for commit `d6759d22995acea5cf152c88a36c3ef9af42767f`.
+- [x] Added a manual execution log template at `documentation/manual_execution_log.csv`.
+
+### Must be completed by running the application
+
+- [ ] Install dependencies in a clean local environment and run the full test command above; archive the new JUnit XML and regenerated CSV.
+- [ ] Install/launch the official OsdagBridge application on a supported desktop environment.
+- [ ] Execute each accessible manual scenario, recording operator, date, OS, app commit/version, observed result and evidence path. Mark inaccessible scenarios BLOCKED and unexecuted scenarios NOT_RUN.
+- [ ] Capture genuine screenshots from the running official application; do not use SVG wireframes as substitutes.
+- [ ] Review and sign the final execution report only after artifacts are generated and checked.
+
+**Release rule:** The QA portfolio may be submitted with these limitations disclosed. Do not claim that the official application is defect-free, fully manually tested, or approved for structural design use.
