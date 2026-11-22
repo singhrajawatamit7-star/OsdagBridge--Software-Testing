@@ -14,17 +14,12 @@ def sample_junit_xml(tmp_path):
     """Generates a valid synthetic JUnit XML file containing all outcome states."""
     xml_content = """<?xml version="1.0" encoding="utf-8"?>
 <testsuites>
-    <testsuite name="pytest" errors="1" failures="1" skipped="1" tests="4" time="1.234">
+    <testsuite name="pytest" errors="1" failures="1" skipped="2" tests="5" time="1.234">
         <testcase classname="tests.test_inputs" name="test_valid_input" time="0.012" />
-        <testcase classname="tests.test_inputs" name="test_failed_case" time="0.045">
-            <failure message="AssertionError: span must be positive">Traceback details here</failure>
-        </testcase>
-        <testcase classname="tests.test_inputs" name="test_error_case" time="0.005">
-            <error message="RuntimeError: solver failure">Error details here</error>
-        </testcase>
-        <testcase classname="tests.test_inputs" name="test_skipped_case" time="0.000">
-            <skipped message="XFAIL upstream defect">Skipped details here</skipped>
-        </testcase>
+        <testcase classname="tests.test_inputs" name="test_failed_case" time="0.045"><failure message="AssertionError: span must be positive">Traceback</failure></testcase>
+        <testcase classname="tests.test_inputs" name="test_error_case" time="0.005"><error message="RuntimeError: solver failure">Error</error></testcase>
+        <testcase classname="tests.test_inputs" name="test_expected_failure" time="0.000"><skipped type="pytest.xfail" message="Upstream defect OB-BUG-009">Expected failure</skipped></testcase>
+        <testcase classname="tests.test_inputs" name="test_genuine_skip" time="0.000"><skipped type="pytest.skip" message="Requires optional GUI environment">Skipped</skipped></testcase>
     </testsuite>
 </testsuites>
 """
@@ -44,7 +39,7 @@ def test_export_valid_junit_xml_to_csv(sample_junit_xml, tmp_path):
         reader = csv.DictReader(f)
         rows = list(reader)
 
-    assert len(rows) == 4
+    assert len(rows) == 5
     expected_cols = {
         "Execution_ID", "Test_ID", "Test_Name", "Category", "Module",
         "Status", "Execution_Time_sec", "Expected_Result", "Actual_Result",
@@ -56,7 +51,7 @@ def test_export_valid_junit_xml_to_csv(sample_junit_xml, tmp_path):
     assert "PASS" in statuses
     assert "FAIL" in statuses
     assert "ERROR" in statuses
-    assert "SKIPPED" in statuses
+    assert statuses == ["PASS", "FAIL", "ERROR", "XFAIL", "SKIPPED"]
 
 
 @pytest.mark.unit
@@ -82,3 +77,23 @@ def test_export_empty_testsuite_xml(tmp_path):
         reader = csv.DictReader(f)
         rows = list(reader)
     assert len(rows) == 0
+
+
+@pytest.mark.unit
+def test_export_xfail_and_skip_are_distinguished(sample_junit_xml, tmp_path):
+    """An expected failure must not be reported as a genuine skip."""
+    csv_file = tmp_path / "outcomes.csv"
+    convert_junit_to_csv(sample_junit_xml, csv_file)
+    with csv_file.open("r", encoding="utf-8", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    by_name = {row["Test_Name"]: row["Status"] for row in rows}
+    assert by_name["test_expected_failure"] == "XFAIL"
+    assert by_name["test_genuine_skip"] == "SKIPPED"
+
+
+@pytest.mark.unit
+def test_export_malformed_xml_returns_nonzero_in_strict_mode(tmp_path):
+    """Strict CI export must fail when the JUnit XML is malformed."""
+    malformed_xml = tmp_path / "malformed.xml"
+    malformed_xml.write_text("<testsuites><testcase>", encoding="utf-8")
+    assert convert_junit_to_csv(malformed_xml, tmp_path / "out.csv", strict=True) == 1
