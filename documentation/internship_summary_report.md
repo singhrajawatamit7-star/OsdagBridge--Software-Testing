@@ -72,7 +72,7 @@ This report describes the QA assets and historical records in the repository. It
 
 ### Updated repository verification (2026-11-22)
 
-The GitHub Actions workflow on main commit `d6759d22995acea5cf152c88a36c3ef9af42767f` completed successfully: Ubuntu/Python 3.11, Ubuntu/Python 3.12, Windows/Python 3.11 and Windows/Python 3.12 all passed. See [workflow run 45010909943](https://github.com/singhrajawat7-star/OsdagBridge--Software-Testing/actions/runs/45010909943). This confirms the QA repository's configured CI checks on that commit; it does not certify the official application's engineering behavior or replace a fresh local test run.
+The GitHub Actions workflow on main commit `d6759d22995acea5cf152c88a36c3ef9af42767f` completed successfully: Ubuntu/Python 3.11, Ubuntu/Python 3.12, Windows/Python 3.11 and Windows/Python 3.12 all passed. See [workflow run 45010909943](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions/runs/45010909943). This confirms the QA repository's configured CI checks on that commit; it does not certify the official application's engineering behavior or replace a fresh local test run.
 
 ### Defect register interpretation
 
