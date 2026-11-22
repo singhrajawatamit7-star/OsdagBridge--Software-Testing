@@ -6,7 +6,7 @@
 [![Dashboard](https://img.shields.io/badge/Dashboard-Streamlit-red.svg)](https://streamlit.io/)
 [![CI Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-brightgreen.svg)](https://github.com/features/actions)
 [![Standards](https://img.shields.io/badge/Standards-IRC%3A24%20%7C%20IRC%3A6%20%7C%20IS%20800-purple.svg)](https://www.irc.nic.in/)
-[![Status](https://img.shields.io/badge/Status-Submission_Ready-success.svg)](#quickstart-setup-instructions)
+[![Status](https://img.shields.io/badge/Status-Conditionally_Verified-yellow.svg)](#quickstart-setup-instructions)
 
 ---
 
@@ -20,8 +20,8 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 |---|---|
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
-| **105 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported from `reports/test_results/junit.xml` — **96 Passed, 9 XFailed upstream blockers with strict enforcement**) |
-| **13 Documented Defects Tracked** | 8 Open upstream defects/blockers in official application, and 5 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
+| **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is generated from the current JUnit XML; outcome totals must be taken from the latest run, not assumed from committed history) |
+| **16 Documented Defects Tracked** | 11 Open upstream application defects/blockers and 5 QA reference-engine regression findings with reproducible test evidence (`issues.csv`) |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
 | **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
 
@@ -213,7 +213,7 @@ python -m pytest tests --cov=osdagbridge_core --html=reports/test_results/test_r
 - **Official OsdagBridge Commit:** `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`
 - **Total Tests Collected:** 105
 - **Passed:** 96
-- **XFailed:** 9 (strictly enforced upstream defects, exit code 0)
+- **XFAIL / SKIPPED:** reported separately by the JUnit exporter; regenerate metrics for each run
 - **Failed / Errors:** 0
 
 ---
