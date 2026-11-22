@@ -116,7 +116,7 @@ def test_preliminary_sizing_upstream_defect_reproduction_ob_bug_003(official_sou
 @pytest.mark.integration
 @pytest.mark.xfail(
     strict=True,
-    reason="Upstream blocker OB-BUG-002: Official designer returns placeholder stub {'design': 'ok'} lacking structural limit state calculations",
+    reason="Upstream blocker OB-BUG-015: Official designer returns placeholder stub {'design': 'ok'} lacking structural limit state calculations",
 )
 def test_plate_girder_designer_engineering_checks(official_source):
     """
@@ -145,7 +145,7 @@ def test_plate_girder_designer_engineering_checks(official_source):
 @pytest.mark.integration
 @pytest.mark.xfail(
     strict=True,
-    reason="Upstream blocker OB-BUG-002: Official analyser returns placeholder stub {'result': 'ok'} lacking grillage analysis outputs",
+    reason="Upstream blocker OB-BUG-016: Official analyser returns placeholder stub {'result': 'ok'} lacking grillage analysis outputs",
 )
 def test_plate_girder_analyser_engineering_outputs(official_source):
     """
