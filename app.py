@@ -174,16 +174,19 @@ nav = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-num_scenarios = len(df_cases) if not df_cases.empty else 50
-num_pytests = len(df_results) if not df_results.empty else 105
-num_defects = len(df_issues) if not df_issues.empty else 13
+# Display only records actually present in the repository CSV files. A missing
+# or empty file must never be replaced with a historical/demo count.
+num_scenarios = len(df_cases)
+num_pytests = len(df_results)
+num_defects = len(df_issues)
 st.sidebar.info(f"""
 **Target Application:** OsdagBridge (IIT Bombay)  
 **Standards:** IRC:24-2010, IRC:6, IS 800  
 **CI/CD:** GitHub Actions (Multi-OS)  
-**QA Matrix:** {num_scenarios} Scenarios | {num_pytests} Automated Tests | {num_defects} Defects  
+**Recorded QA Data:** {num_scenarios} Scenarios | {num_pytests} Result Rows | {num_defects} Defects  
 **Application Status:** ⚠️ Upstream Blockers Isolated  
 """)
+st.sidebar.caption("Counts reflect CSV records currently present; zero means no records are available, not that tests were executed.")
 
 
 # ==============================================================================
@@ -274,7 +277,7 @@ if nav == "📊 QA Executive Dashboard":
 # ==============================================================================
 elif nav == "📋 Test Case Repository":
     st.title("📋 Comprehensive Test Case Specification")
-    st.write("Detailed test scenarios covering functional workflows, boundary analysis, error handling, regression, and reporting (50 documented cases).")
+    st.write(f"Detailed test scenarios covering functional workflows, boundary analysis, error handling, regression, and reporting ({len(df_cases)} documented cases loaded from test_cases.csv).")
 
     if not df_cases.empty:
         col_f1, col_f2, col_f3 = st.columns(3)
@@ -484,12 +487,12 @@ elif nav == "⚡ Automated Test Runner":
     st.write("Execute automated regression and integration test suites directly against official OsdagBridge and QA verification modules.")
 
     c_run1, c_run2 = st.columns([2, 1])
-    total_test_count = len(df_results) if not df_results.empty else 105
+    st.caption(f"{len(df_results)} historical/current result rows are present in test_results.csv; this is not a test-discovery count.")
     with c_run1:
         test_scope = st.selectbox(
             "Select Test Suite to Execute",
             [
-                f"🚀 Full Test Suite ({total_test_count} Tests across all suites)",
+                "🚀 Full Test Suite (all discovered tests)",
                 "🌟 Functional End-to-End & IRC Standards (tests/functional)",
                 "🔗 Official Application Integration (tests/integration)",
                 "🧪 Unit Validation & Boundaries (tests/unit)",
