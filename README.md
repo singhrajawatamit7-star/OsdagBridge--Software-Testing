@@ -21,7 +21,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **Documented Test Cases** | Scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv`). The committed execution matrix is historical until re-executed. |
 | **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is generated from the current JUnit XML; outcome totals must be taken from the latest run, not assumed from committed history) |
-| **16 Documented Defects Tracked** | 12 Open upstream application defects/blockers and 4 QA reference-engine regression findings with reproducible test evidence (`issues.csv`) |
+| **16 Findings Tracked** | 12 official-application defects and 4 QA-reference findings; scope/status is explicit in `issues.csv` |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
 | **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
 
@@ -60,9 +60,9 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
                         v
       +-------------------------------------------------------------------------+
       |                       Defect Tracking & Reports                         |
-      | - test_cases.csv   (50 manual scenarios: 45 Pass, 2 Fail, 3 Blocked)    |
-      | - test_results.csv (105 historical test executions: 96 Pass, 9 XFAIL)    |
-      | - issues.csv       (13 documented defects with reproducible evidence)   |
+      | - test_cases.csv   (50 documented scenarios; historical outcomes only)    |
+      | - test_results.csv (105 historical automated result records; regenerate before reporting current totals) |
+      | - issues.csv       (16 tracked findings: 12 official-app defects + 4 QA-reference findings) |
       | - UI Wireframe mockups (reports/screenshots/*.svg)                      |
       +-------------------------------------------------------------------------+
                         |
@@ -97,7 +97,7 @@ OsdagBridge--Software-Testing/
 │
 ├── test_cases.csv                     # 50 documented test cases across 8 categories
 ├── test_results.csv                   # Historical test execution records; regenerate after each run
-├── issues.csv                         # 13 documented defects with reproduction evidence
+├── issues.csv                         # 16 tracked findings; see scope and status per row
 │
 ├── scripts/
 │   └── export_junit_csv.py            # Converts JUnit XML → test_results.csv with --strict
@@ -220,7 +220,7 @@ python -m pytest tests --cov=osdagbridge_core --html=reports/test_results/test_r
 
 ## 📋 Documented Test Cases
 
-The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 scenarios across all functional domains, distinguishing passing features from upstream defects:
+The test matrix in ``test_cases.csv` tracks 50 documented scenarios across all functional domains, distinguishing passing features from upstream defects:
 
 | Category | Cases | Focus | Execution Summary | Pass Rate |
 |:---|:---:|:---|:---:|:---:|
@@ -232,7 +232,7 @@ The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 sce
 | Report Generation | 5 | Markdown, HTML, compliance table, CSV export, Unicode path writing | 5 Pass | 100.0% |
 | Error Handling | 5 | Missing girder, single-girder error, slenderness warning, corrupted input | 5 Pass | 100.0% |
 | Regression Testing | 5 | Alpha injection, zero web thickness, Unicode export, impact factor floor | 5 Pass | 100.0% |
-| **Total** | **50 records** | **Scenario inventory in `test_cases.csv`** | Historical manual outcomes only; not freshly re-verified | **Not a current pass rate** |
+| **Total** | **50 records** | **Scenario inventory in `test_cases.csv`** | Historical outcomes only; not freshly re-verified | **Not a current pass rate** |
 
 *The 45/2/3 manual outcome figures are historical. Do not report them as current execution results without repeating the scenarios and attaching dated evidence.*
 
@@ -257,6 +257,9 @@ Tracked in `issues.csv` — 16 recorded findings across the official application
 | **OB-BUG-011** | `to_si` helper is a dummy function returning input without metric conversion | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_units_conversion_metric` |
 | **OB-BUG-012** | `get_vehicle_loads()` in `irc6_2017.py` returns empty list instead of IRC:6 vehicles | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_code_irc6_vehicle_loads_populated` |
 | **OB-BUG-013** | `export_step` writes plain text string instead of ISO-10303-21 STEP structure | Official App | High | Open | `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_cad_export_iso_step_format` |
+| **OB-BUG-014** | Official validation accepts a negative span | Official App | High | Open | `tests/integration/test_official_application.py::test_official_input_validation_rejects_negative_span` |
+| **OB-BUG-015** | Plate girder designer lacks structural limit-state outputs | Official App | Critical | Open | `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_designer_engineering_checks` |
+| **OB-BUG-016** | Plate girder analyser lacks moment, shear and deflection outputs | Official App | Critical | Open | `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_analyser_engineering_outputs` |
 
 ---
 
@@ -305,11 +308,15 @@ streamlit run app.py
 - **QA Framework:** Open-source educational and portfolio submission under the MIT License.
 
 
-## Evidence and submission limitations
+## Evidence, execution status and release boundary
 
-- Dashboard counts are derived only from the CSV files currently present. They are record counts, not proof that those tests ran during the current session.
-- `test_results.csv` contains historical execution records until regenerated from a fresh JUnit XML report.
-- SVG previews are illustrative/design assets. They are not screenshots of the official OsdagBridge desktop application.
-- Actual desktop/manual execution evidence remains pending. Do not mark a manual scenario PASS without a dated screenshot or equivalent reproducible evidence.
-- GitHub Actions status must be checked on the latest commit before describing the repository as CI-verified.
-- The QA reference utility and official OsdagBridge application are separate test scopes; results must not be combined into one application-quality claim.
+- Latest verified GitHub Actions run on the prior main commit: [run 45010909943](https://github.com/singhrajawat7-star/OsdagBridge--Software-Testing/actions/runs/45010909943), all four Ubuntu/Windows × Python 3.11/3.12 jobs passed. A documentation change creates a new commit and requires a new CI run.
+- `test_results.csv` is historical until regenerated from a fresh JUnit XML file. Do not use its committed row count as current execution evidence.
+- The 50 rows in `test_cases.csv` are a scenario inventory. Their historical status labels are not a substitute for a dated execution log.
+- SVG previews are illustrative wireframes, not screenshots of the official OsdagBridge desktop application.
+- Manual desktop scenarios remain NOT RUN / BLOCKED until the official app can be launched and each scenario is actually exercised. Store genuine screenshots and logs under `reports/evidence/`.
+- The official application has 12 open upstream defects in the current register. Defect-reproduction tests that pass demonstrate that a defect is reproducible; they do not mean the application feature works.
+- `osdagbridge_core` is a separate QA reference utility. Its passing tests must not be represented as proof of the official application’s engineering calculations.
+- This repository is suitable as a QA portfolio with limitations disclosed. It is not evidence that the official bridge-design software is ready for engineering use.
+
+See [the release checklist](documentation/release_checklist.md) and [manual execution log template](documentation/manual_execution_log.csv) before submission.
