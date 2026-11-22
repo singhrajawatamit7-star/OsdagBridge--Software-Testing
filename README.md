@@ -20,7 +20,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 |---|---|
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **Documented Test Cases** | Scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv`). The committed execution matrix is historical until re-executed. |
-| **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is generated from the current JUnit XML; outcome totals must be taken from the latest run, not assumed from committed history) |
+| **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is a historical snapshot until regenerated from a fresh JUnit XML file) |
 | **16 Findings Tracked** | 12 official-application defects and 4 QA-reference findings; scope/status is explicit in `issues.csv` |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
 | **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
@@ -63,7 +63,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
       | - test_cases.csv   (50 documented scenarios; historical outcomes only)    |
       | - test_results.csv (105 historical automated result records; regenerate before reporting current totals) |
       | - issues.csv       (16 tracked findings: 12 official-app defects + 4 QA-reference findings) |
-      | - UI Wireframe mockups (reports/screenshots/*.svg)                      |
+      | - UI wireframes/mockups (not official-app screenshots)                   |
       +-------------------------------------------------------------------------+
                         |
                         v
@@ -213,32 +213,32 @@ python -m pytest tests --cov=osdagbridge_core --html=reports/test_results/test_r
 - **Official OsdagBridge Commit:** `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`
 - **Total Tests Collected:** 105
 - **Passed:** 96
-- **XFAIL:** 9 (historical report; the corrected exporter now records this separately from SKIPPED)\n- **SKIPPED:** 0 in the historical execution report
+- **XFAIL:** 9 (historical report; separate from SKIPPED)\n- **SKIPPED:** 0 in the historical execution report
 - **Failed / Errors:** 0
 
 ---
 
 ## 📋 Documented Test Cases
 
-The test matrix in ``test_cases.csv` tracks 50 documented scenarios across all functional domains, distinguishing passing features from upstream defects:
+`test_cases.csv` contains 50 documented scenarios across eight functional domains. The status labels below are historical records, not a new manual execution.
 
 | Category | Cases | Focus | Execution Summary | Pass Rate |
 |:---|:---:|:---|:---:|:---:|
-| Installation & Launch | 5 | Python compatibility, pip install, core import, CLI, desktop runnable | 3 Pass, 1 Fail (OB-005), 1 Blocked (OB-003) | 60.0% |
-| Project Management | 5 | DTO instantiation, modification, JSON serialization, corrupted file handling | 5 Pass | 100.0% |
-| Input Validation | 10 | Valid spans, empty fields, negatives, boundaries [5m–60m], type errors | 10 Pass | 100.0% |
-| Design Execution | 8 | Preliminary sizing, analyser, designer, dead/live loads, moment, shear | 5 Pass, 1 Fail (OB-021), 2 Blocked (OB-022, OB-023) | 62.5% |
-| Results & Visualization | 7 | Deflection (L/800), extreme spans, steel grade scaling, 3D CAD, summary cards | 7 Pass | 100.0% |
-| Report Generation | 5 | Markdown, HTML, compliance table, CSV export, Unicode path writing | 5 Pass | 100.0% |
-| Error Handling | 5 | Missing girder, single-girder error, slenderness warning, corrupted input | 5 Pass | 100.0% |
-| Regression Testing | 5 | Alpha injection, zero web thickness, Unicode export, impact factor floor | 5 Pass | 100.0% |
+| Installation & Launch | 5 | Python compatibility, pip install, core import, CLI, desktop runnable | Historical labels; not re-executed | — |
+| Project Management | 5 | DTO instantiation, modification, JSON serialization, corrupted file handling | Historical labels; not re-executed | — |
+| Input Validation | 10 | Valid spans, empty fields, negatives, boundaries [5m–60m], type errors | Historical labels; not re-executed | — |
+| Design Execution | 8 | Preliminary sizing, analyser, designer, dead/live loads, moment, shear | Historical labels; not re-executed | — |
+| Results & Visualization | 7 | Deflection (L/800), extreme spans, steel grade scaling, 3D CAD, summary cards | Historical labels; not re-executed | — |
+| Report Generation | 5 | Markdown, HTML, compliance table, CSV export, Unicode path writing | Historical labels; not re-executed | — |
+| Error Handling | 5 | Missing girder, single-girder error, slenderness warning, corrupted input | Historical labels; not re-executed | — |
+| Regression Testing | 5 | Alpha injection, zero web thickness, Unicode export, impact factor floor | Historical labels; not re-executed | — |
 | **Total** | **50 records** | **Scenario inventory in `test_cases.csv`** | Historical outcomes only; not freshly re-verified | **Not a current pass rate** |
 
 *The 45/2/3 manual outcome figures are historical. Do not report them as current execution results without repeating the scenarios and attaching dated evidence.*
 
 ---
 
-## 🐞 Defect Register (16 Documented Defects)
+## 🐞 Defect Register (16 Tracked Findings)
 
 Tracked in `issues.csv` — 16 recorded findings across the official application and the separate QA reference utility. Each finding's scope and status are in the register:
 
@@ -310,7 +310,7 @@ streamlit run app.py
 
 ## Evidence, execution status and release boundary
 
-- Latest verified GitHub Actions run on the prior main commit: [run 45010909943](https://github.com/singhrajawat7-star/OsdagBridge--Software-Testing/actions/runs/45010909943), all four Ubuntu/Windows × Python 3.11/3.12 jobs passed. A documentation change creates a new commit and requires a new CI run.
+- Latest verified GitHub Actions run on the prior main commit: [run 45010909943](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions/runs/45010909943), all four Ubuntu/Windows × Python 3.11/3.12 jobs passed. A documentation change creates a new commit and requires a new CI run.
 - `test_results.csv` is historical until regenerated from a fresh JUnit XML file. Do not use its committed row count as current execution evidence.
 - The 50 rows in `test_cases.csv` are a scenario inventory. Their historical status labels are not a substitute for a dated execution log.
 - SVG previews are illustrative wireframes, not screenshots of the official OsdagBridge desktop application.
