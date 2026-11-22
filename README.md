@@ -6,7 +6,7 @@
 [![Dashboard](https://img.shields.io/badge/Dashboard-Streamlit-red.svg)](https://streamlit.io/)
 [![CI Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-brightgreen.svg)](https://github.com/features/actions)
 [![Standards](https://img.shields.io/badge/Standards-IRC%3A24%20%7C%20IRC%3A6%20%7C%20IS%20800-purple.svg)](https://www.irc.nic.in/)
-[![Status](https://img.shields.io/badge/Status-Submission_Ready-success.svg)](#quickstart-setup-instructions)
+[![Status](https://img.shields.io/badge/Status-Conditionally_Verified-yellow.svg)](#quickstart-setup-instructions)
 
 ---
 
@@ -20,8 +20,8 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 |---|---|
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
-| **105 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported from `reports/test_results/junit.xml` — **96 Passed, 9 XFailed upstream blockers with strict enforcement**) |
-| **13 Documented Defects Tracked** | 8 Open upstream defects/blockers in official application, and 5 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
+| **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is generated from the current JUnit XML; outcome totals must be taken from the latest run, not assumed from committed history) |
+| **16 Documented Defects Tracked** | 12 Open upstream application defects/blockers and 4 QA reference-engine regression findings with reproducible test evidence (`issues.csv`) |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
 | **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
 
@@ -61,7 +61,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
       +-------------------------------------------------------------------------+
       |                       Defect Tracking & Reports                         |
       | - test_cases.csv   (50 manual scenarios: 45 Pass, 2 Fail, 3 Blocked)    |
-      | - test_results.csv (105 automated test executions: 96 Pass, 9 XFail)    |
+      | - test_results.csv (105 historical test executions: 96 Pass, 9 XFAIL)    |
       | - issues.csv       (13 documented defects with reproducible evidence)   |
       | - UI Wireframe mockups (reports/screenshots/*.svg)                      |
       +-------------------------------------------------------------------------+
@@ -86,7 +86,7 @@ OsdagBridge--Software-Testing/
 ├── .github/
 │   └── workflows/
 │       ├── qa.yml                     # Multi-OS CI (Ubuntu & Windows, Python 3.11/3.12)
-│       └── tests.yml                  # CI workflow alias
+│       
 │
 ├── .gitignore                         # Excludes caches, temporary reports, local envs
 ├── pytest.ini                         # Pytest configuration with strict markers
@@ -96,7 +96,7 @@ OsdagBridge--Software-Testing/
 ├── README.md
 │
 ├── test_cases.csv                     # 50 documented test cases across 8 categories
-├── test_results.csv                   # 105 automated test execution records (JUnit export)
+├── test_results.csv                   # Historical test execution records; regenerate after each run
 ├── issues.csv                         # 13 documented defects with reproduction evidence
 │
 ├── scripts/
@@ -207,13 +207,13 @@ python -m pytest tests -v
 python -m pytest tests --cov=osdagbridge_core --html=reports/test_results/test_report.html --self-contained-html
 ```
 
-### Test Suite Execution Summary (Verified Local Run)
+### Historical Test Suite Execution Summary (2026-11-21; not a current run)
 - **Execution Date:** 2026-11-21
 - **Python Version:** Python 3.13.7 (MSC v.1944 64-bit on Windows 11)
 - **Official OsdagBridge Commit:** `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`
 - **Total Tests Collected:** 105
 - **Passed:** 96
-- **XFailed:** 9 (strictly enforced upstream defects, exit code 0)
+- **XFAIL:** 9 (historical report; the corrected exporter now records this separately from SKIPPED)\n- **SKIPPED:** 0 in the historical execution report
 - **Failed / Errors:** 0
 
 ---
@@ -238,9 +238,9 @@ The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 sce
 
 ---
 
-## 🐞 Defect Register (13 Documented Defects)
+## 🐞 Defect Register (16 Documented Defects)
 
-Tracked in `issues.csv` — detailing 8 open upstream defects alongside 5 verified regression guards:
+Tracked in `issues.csv` — 12 open upstream application defects and 4 verified QA reference-engine regression findings:
 
 | Bug ID | Title | Scope | Severity | Status | Verification & Evidence |
 |:---|:---|:---:|:---:|:---:|:---|

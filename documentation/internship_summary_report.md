@@ -16,7 +16,7 @@ The testing program bridges the gap between software quality engineering and civ
 1. Direct integration tests discovering and exercising the official `osdagbridge` package.
 2. A comprehensive repository of **50 documented test cases** categorized across 8 operational areas.
 3. Automated test suites built with **Pytest** covering unit models, integration pipelines, GUI bootstrap flows, and regression assertions.
-4. A verified defect register (`issues.csv`) documenting 7 reproducible issues with severity classifications and visual evidence.
+4. A verified defect register (`issues.csv`) documenting reproducible upstream defects and QA reference-engine findings; see the authoritative `issues.csv` register.
 5. An interactive **Streamlit QA Analytics Dashboard** providing live telemetry, test filtering, and calculation verifications.
 6. A multi-OS **GitHub Actions Continuous Integration** pipeline.
 
@@ -28,10 +28,10 @@ The testing program bridges the gap between software quality engineering and civ
 | :--- | :--- | :--- |
 | Documented Test Cases | 50 | **50 Test Cases (`test_cases.csv`)** |
 | Functional Test Categories | 8 | **8 Categories (Installation, Project, Validation, Design, Results, Reports, Errors, Regression)** |
-| Automated Pytest Suite | > 60 | **105 Automated Tests (`test_results.csv` from real JUnit XML)** |
+| Automated Pytest Suite | > 60 | **105 historical automated test records; regenerate with the current JUnit exporter before quoting a new result** |
 | Documented Matrix Pass Rate | > 85% | **90.0% (45 Passed, 2 Failed, 3 Blocked — isolating upstream blockers)** |
-| Defects Identified & Documented | 5+ | **13 Defects Tracked (`OB-BUG-001` to `OB-BUG-013`)** |
-| Average Test Execution Duration | < 0.5s | **0.22 seconds total suite runtime** |
+| Defects Identified & Documented | 5+ | **16 Defects Tracked (`OB-BUG-001` to `OB-BUG-016`)** |
+| Average Test Execution Duration | < 0.5s | Historical runtime only; regenerate timing from the current environment before reporting. |
 | Code Compliance Standard | IRC:24 / IS 800 | **Verified against IRC:24-2010 Cl 505-509 & IS 800 Cl 8.2-8.4** |
 
 ---
