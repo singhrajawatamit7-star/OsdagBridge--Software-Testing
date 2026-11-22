@@ -21,12 +21,12 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
 | **105 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported from `reports/test_results/junit.xml` — **96 Passed, 9 XFailed upstream blockers with strict enforcement**) |
-| **16 Documented Defects Tracked** | 8 Open upstream defects/blockers in official application, and 5 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
+| **16 Defect Records** | 11 open official-application findings and 5 regression records scoped to the independent QA utility (`issues.csv`) |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
 | **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/tests.yml`) |
 
 > **Official OsdagBridge Source Verification:**
-> All integration tests evaluate against the genuine official checkout of **[osdag-admin/OsdagBridge](https://github.com/osdag-admin/OsdagBridge)** at **Commit `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`** (`Refactor`).
+> CI checks out the official repository of **[osdag-admin/OsdagBridge](https://github.com/osdag-admin/OsdagBridge)** at **Commit `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`** (`Refactor`).
 
 > **Independent QA Reference Utility (`osdagbridge_core`):**
 > This repository contains an independent **QA Reference Utility** (`osdagbridge_core/`) that provides validated bridge calculations for the Streamlit dashboard's verification engine and reference benchmarking against IRC:24 and IS 800:2007. It is **not** the official OsdagBridge calculation engine and is never presented as such.
@@ -85,8 +85,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 OsdagBridge--Software-Testing/
 ├── .github/
 │   └── workflows/
-│       ├── qa.yml                     # Multi-OS CI (Ubuntu & Windows, Python 3.11/3.12)
-│       └── tests.yml                  # CI workflow alias
+│       └── tests.yml                  # Single pinned multi-OS CI workflow
 │
 ├── .gitignore                         # Excludes caches, temporary reports, local envs
 ├── pytest.ini                         # Pytest configuration with strict markers
@@ -97,7 +96,7 @@ OsdagBridge--Software-Testing/
 │
 ├── test_cases.csv                     # 50 documented test cases across 8 categories
 ├── test_results.csv                   # 105 automated test execution records (JUnit export)
-├── issues.csv                         # 13 documented defects with reproduction evidence
+├── issues.csv                         # 16 documented defect records with reproduction evidence
 │
 ├── scripts/
 │   └── export_junit_csv.py            # Converts JUnit XML → test_results.csv with --strict
