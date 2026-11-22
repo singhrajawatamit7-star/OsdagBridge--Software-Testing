@@ -28,9 +28,9 @@ The testing program bridges the gap between software quality engineering and civ
 | :--- | :--- | :--- |
 | Documented Test Cases | 50 | **50 Test Cases (`test_cases.csv`)** |
 | Functional Test Categories | 8 | **8 Categories (Installation, Project, Validation, Design, Results, Reports, Errors, Regression)** |
-| Automated Pytest Suite | > 60 | 105 historical result rows only; not independently re-run in this revision |
-| Documented Matrix Pass Rate | > 85% | Historical record only: 45 Passed, 2 Failed, 3 Blocked; re-execution and dated evidence are pending |
-| Defects Identified & Documented | 5+ | **16 Defects Tracked (`OB-BUG-001` to `OB-BUG-016`)** |
+| Automated Pytest Suite | > 60 | 105 historical result rows; not a fresh execution for this submission revision |
+| Documented Matrix Pass Rate | > 85% | Historical labels only: 45 PASS, 2 FAIL, 3 BLOCKED; fresh dated execution evidence remains pending |
+| Defects Identified & Documented | 5+ | **16 Findings Tracked (`OB-BUG-001` to `OB-BUG-016`): 12 open official-app defects and 4 QA-reference utility findings** |
 | Average Test Execution Duration | < 0.5s | Historical runtime only; regenerate timing from the current environment before reporting. |
 | Code Compliance Standard | IRC:24 / IS 800 | Standards are referenced by test specifications; this QA project is not a structural design certification or independent code-compliance approval |
 
@@ -68,3 +68,20 @@ This report describes the QA assets and historical records in the repository. It
 - Confirm every GitHub Actions matrix job is successful on the final commit.
 - Execute accessible manual scenarios against the genuine official desktop application and attach dated screenshots; mark inaccessible scenarios BLOCKED.
 - Keep upstream defects open until the official application fix is verified independently.
+
+
+### Updated repository verification (2026-11-22)
+
+The GitHub Actions workflow on main commit `d6759d22995acea5cf152c88a36c3ef9af42767f` completed successfully: Ubuntu/Python 3.11, Ubuntu/Python 3.12, Windows/Python 3.11 and Windows/Python 3.12 all passed. See [workflow run 45010909943](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions/runs/45010909943). This confirms the QA repository's configured CI checks on that commit; it does not certify the official application's engineering behavior or replace a fresh local test run.
+
+### Defect register interpretation
+
+The register contains 16 findings. OB-BUG-001 through OB-BUG-003 and OB-BUG-008 through OB-BUG-016 describe 12 open issues in the official application. OB-BUG-004 through OB-BUG-007 concern the independent `osdagbridge_core` QA reference utility; their regression tests currently assert that the reported edge cases are handled. They must not be described as open defects in the official application.
+
+### Manual test evidence boundary
+
+The 50 scenario records are an inventory, not 50 verified manual executions. Historical labels (45 PASS, 2 FAIL, 3 BLOCKED) are retained for traceability only. Fresh operator, date, environment, observed result and screenshot/log evidence are required before reporting current manual results. Use `documentation/manual_execution_log.csv` to record those executions. Do not create or submit mock screenshots as application evidence.
+
+### Submission decision
+
+This is a conditionally verified QA portfolio. The repository CI matrix is green on the cited commit, but a fresh local full-suite run and genuine desktop/manual evidence remain outstanding. The 12 upstream application defects remain open. The project does not certify OsdagBridge as fit for structural engineering use.

@@ -4,7 +4,7 @@
 **Version:** 2.0.0  
 **Author:** QA Engineering Intern  
 **Date:** November 2026  
-**Status:** Approved / Deployment Ready  
+**Status:** Test plan defined; execution and release approval conditional  
 
 ---
 

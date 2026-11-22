@@ -2,7 +2,7 @@
 
 ## Evidence status
 
-**This document is a reporting template and historical-record summary, not proof of a fresh run performed by this revision.** The repository previously recorded a run dated 2026-11-21 20:15 UTC on Windows 11 / Python 3.13.7 / Pytest 9.2.0. That historical report stated 105 automated tests: 96 passed and 9 strict expected failures. Those numbers have not been independently re-executed during this repository edit and must be treated as historical until regenerated.
+**This document is a reporting template and historical-record summary, not proof of a fresh local run performed by this revision.** The repository previously recorded a run dated 2026-11-21 20:15 UTC on Windows 11 / Python 3.13.7 / Pytest 9.2.0. That historical report stated 105 automated tests: 96 passed and 9 strict expected failures. Those numbers have not been independently re-executed during this repository edit and must be treated as historical until regenerated.
 
 ## Reproduce the current run
 
@@ -40,4 +40,11 @@ The authoritative defect register is `issues.csv`. Keep issue IDs unique and syn
 
 ## Release decision
 
-**Conditionally verified as a QA portfolio; not release-approved.** A release claim requires a fresh test run, matching JUnit/CSV counts, successful CI matrix, verified defect references and genuine manual evidence. See `documentation/release_checklist.md`.
+**Conditionally verified as a QA portfolio; not fully release-approved.** A release claim requires a fresh test run, matching JUnit/CSV counts, successful CI matrix, verified defect references and genuine manual evidence. See `documentation/release_checklist.md`.
+
+
+## GitHub Actions verification (2026-11-22)
+
+The main-branch workflow run [45010909943](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions/runs/45010909943) completed with success on all four configured jobs: Ubuntu/Python 3.11, Ubuntu/Python 3.12, Windows/Python 3.11 and Windows/Python 3.12. The tested commit was `d6759d22995acea5cf152c88a36c3ef9af42767f`. Any subsequent commit requires checking its own workflow run.
+
+This CI result is distinct from a fresh local execution of the complete test suite and from manual execution of the official desktop application. The latter two remain outstanding until the operator runs them and records the outputs.
