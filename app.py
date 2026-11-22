@@ -106,7 +106,7 @@ if not df_issues.empty:
     if "Module" not in df_issues.columns:
         df_issues["Module"] = df_issues.get("Application_Version", "Core Engine")
     if "Reported_Date" not in df_issues.columns:
-        df_issues["Reported_Date"] = "2026-11-16"
+        df_issues["Reported_Date"] = "Unknown"
     if "Environment" not in df_issues.columns and "Operating_System" in df_issues.columns:
         df_issues["Environment"] = df_issues["Operating_System"]
     if "Expected_Behavior" not in df_issues.columns and "Expected_Result" in df_issues.columns:
