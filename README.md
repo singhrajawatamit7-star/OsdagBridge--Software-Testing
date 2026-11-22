@@ -21,7 +21,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
 | **105 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported from `reports/test_results/junit.xml` — **96 Passed, 9 XFailed upstream blockers with strict enforcement**) |
-| **16 Defect Records** | 11 open official-application findings and 5 regression records scoped to the independent QA utility (`issues.csv`) |
+| **16 Defect Records** | 12 open official-application findings and 4 regression records scoped to the independent QA utility (`issues.csv`) |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
 | **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/tests.yml`) |
 
@@ -239,7 +239,7 @@ The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 sce
 
 ## 🐞 Defect Register (16 Documented Defects)
 
-Tracked in `issues.csv` — 11 open official-application findings and 5 regression records scoped to the independent QA utility:
+Tracked in `issues.csv` — 12 open official-application findings and 4 regression records scoped to the independent QA utility:
 
 | Bug ID | Title | Scope | Severity | Status | Verification & Evidence |
 |:---|:---|:---:|:---:|:---:|:---|
