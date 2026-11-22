@@ -174,9 +174,9 @@ nav = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-num_scenarios = len(df_cases) if not df_cases.empty else 50
-num_pytests = len(df_results) if not df_results.empty else 105
-num_defects = len(df_issues) if not df_issues.empty else 13
+num_scenarios = len(df_cases)
+num_pytests = len(df_results)
+num_defects = len(df_issues)
 st.sidebar.info(f"""
 **Target Application:** OsdagBridge (IIT Bombay)  
 **Standards:** IRC:24-2010, IRC:6, IS 800  
@@ -204,6 +204,7 @@ if nav == "📊 QA Executive Dashboard":
         failed_cases = 0
         error_cases = 0
         skipped_cases = 0
+        xfailed_cases = 0
         total_executed = 0
         pass_rate = 0.0
     else:
@@ -211,12 +212,14 @@ if nav == "📊 QA Executive Dashboard":
         failed_cases = int((df_results["Status"] == "FAIL").sum())
         error_cases = int((df_results["Status"] == "ERROR").sum())
         skipped_cases = int((df_results["Status"] == "SKIPPED").sum())
+        xfailed_cases = int((df_results["Status"] == "XFAIL").sum())
         total_executed = len(df_results)
-        pass_rate = (passed_cases / total_executed * 100.0) if total_executed > 0 else 0.0
+        eligible_cases = total_executed - skipped_cases - xfailed_cases
+        pass_rate = (passed_cases / eligible_cases * 100.0) if eligible_cases > 0 else 0.0
     total_bugs = len(df_issues)
-    total_automated_tests = len(df_results) if not df_results.empty else 76
+    total_automated_tests = len(df_results)
 
-    c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
+    c1, c2, c3, c4, c5, c6, c7, c8 = st.columns(8)
     with c1:
         st.metric("Test Scenarios", total_cases)
     with c2:
@@ -228,8 +231,10 @@ if nav == "📊 QA Executive Dashboard":
     with c5:
         st.metric("Failed/Errors", f"{failed_cases + error_cases} ❌")
     with c6:
-        st.metric("Skipped/XFail", f"{skipped_cases} ⚠️")
+        st.metric("XFailed", f"{xfailed_cases} ⚠️")
     with c7:
+        st.metric("Skipped", f"{skipped_cases}")
+    with c8:
         st.metric("Pass Rate", f"{pass_rate:.1f}%")
 
     st.markdown("---")
