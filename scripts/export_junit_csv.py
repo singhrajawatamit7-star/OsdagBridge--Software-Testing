@@ -1,9 +1,21 @@
 """Convert a real Pytest JUnit XML report into CSV."""
 import csv
+import re
 import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from pathlib import Path
+
+
+def classify_skipped_case(skipped_element):
+    """Distinguish pytest xfails from genuine skipped tests in JUnit XML."""
+    skipped_type = skipped_element.attrib.get("type", "").strip().lower()
+    message = skipped_element.attrib.get("message", "Test skipped")
+    if skipped_type in {"pytest.xfail", "xfail"} or "xfail" in skipped_type:
+        return "XFAIL"
+    if re.match(r"^\\s*xfail(?:\\b|:)", message, flags=re.IGNORECASE):
+        return "XFAIL"
+    return "SKIPPED"
 
 
 def convert_junit_to_csv(xml_path, csv_path, strict=False):
@@ -41,8 +53,8 @@ def convert_junit_to_csv(xml_path, csv_path, strict=False):
             status = "ERROR"
             remarks = error.attrib.get("message", "Test error")
         elif skipped is not None:
-            status = "SKIPPED"
-            remarks = skipped.attrib.get("message", "Test skipped / xfailed")
+            status = classify_skipped_case(skipped)
+            remarks = skipped.attrib.get("message", "Test skipped")
         else:
             status = "PASS"
             remarks = "Pytest completed successfully"
