@@ -14,16 +14,16 @@
 
 This repository is the complete **Software Testing & Quality Assurance Portfolio Project** for **[OsdagBridge](https://github.com/osdag-admin/OsdagBridge)**, the open-source structural-engineering software for bridge analysis developed under the Osdag initiative at IIT Bombay.
 
-The project demonstrates end-to-end QA capabilities expected of a **Software Testing / QA Engineer**:
+The project demonstrates QA engineering practices through an automated test framework, documented scenario inventory, defect reporting, and CI. Manual execution evidence remains a separate pending activity.
 
 | Deliverable | Detail |
 |---|---|
-| **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
+| **Official Application Integration** | Automated checks exercise available CLI entry points, unit helpers, code registries and desktop bootstrap behavior; known upstream blockers are isolated and reported (`tests/integration/`) |
 | **Documented Test Cases** | Scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv`). The committed execution matrix is historical until re-executed. |
 | **Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` is a historical snapshot until regenerated from a fresh JUnit XML file) |
 | **16 Findings Tracked** | 12 official-application defects and 4 QA-reference findings; scope/status is explicit in `issues.csv` |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
-| **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
+| **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) with JUnit/HTML reporting and strict failure exit codes (`.github/workflows/qa.yml`) |
 
 > **Official OsdagBridge Source Verification:**
 > All integration tests evaluate against the genuine official checkout of **[osdag-admin/OsdagBridge](https://github.com/osdag-admin/OsdagBridge)** at **Commit `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`** (`Refactor`).
