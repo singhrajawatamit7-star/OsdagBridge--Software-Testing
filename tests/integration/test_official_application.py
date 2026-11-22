@@ -135,7 +135,7 @@ def test_official_units_conversion_metric(official_source):
 # ---------------------------------------------------------------------------
 @pytest.mark.defect_reproduction
 @pytest.mark.integration
-def test_repro_ob_bug_001_official_validation_accepts_negative_span(official_source):
+def test_repro_ob_bug_014_official_validation_accepts_negative_span(official_source):
     """
     Reproduces OB-BUG-014 (Upstream Defect): official validate_project utility is an unverified stub
     returning True even for invalid geometry payloads (negative span).
