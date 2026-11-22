@@ -23,10 +23,11 @@ jobs:
         with:
           path: OsdagBridge-Software-Testing
 
-      - name: Checkout official OsdagBridge
+      - name: Checkout pinned official OsdagBridge source
         uses: actions/checkout@v4
         with:
           repository: osdag-admin/OsdagBridge
+          ref: 2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74
           path: OsdagBridge
 
       - name: Set up Python
@@ -42,10 +43,9 @@ jobs:
 
       - name: Install QA dependencies
         working-directory: OsdagBridge-Software-Testing
-        run: |
-          python -m pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
-      - name: Verify official checkout and initialize report directories
+      - name: Verify official checkout and initialize reports
         working-directory: OsdagBridge-Software-Testing
         env:
           OSDAGBRIDGE_ROOT: ${{ github.workspace }}/OsdagBridge
@@ -63,7 +63,7 @@ jobs:
         run: |
           python -m pytest tests -v --tb=short --junitxml=reports/test_results/junit.xml --html=reports/test_results/test_report.html --self-contained-html
 
-      - name: Synchronize test results CSV from JUnit XML
+      - name: Export normalized CSV (preserve XFAIL vs SKIPPED)
         if: always()
         working-directory: OsdagBridge-Software-Testing
         run: |
