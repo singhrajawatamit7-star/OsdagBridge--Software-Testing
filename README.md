@@ -6,7 +6,7 @@
 [![Dashboard](https://img.shields.io/badge/Dashboard-Streamlit-red.svg)](https://streamlit.io/)
 [![CI Pipeline](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-brightgreen.svg)](https://github.com/features/actions)
 [![Standards](https://img.shields.io/badge/Standards-IRC%3A24%20%7C%20IRC%3A6%20%7C%20IS%20800-purple.svg)](https://www.irc.nic.in/)
-[![Status](https://img.shields.io/badge/Status-Submission_Ready-success.svg)](#quickstart-setup-instructions)
+[![Status](https://img.shields.io/badge/Status-Conditionally_Verified-yellow.svg)](#quickstart-setup-instructions)
 
 ---
 
@@ -21,9 +21,9 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
 | **Official Application Integration** | Real integration tests executing CLI entry points, unit conversions, code registries, desktop entry points, and strictly isolating upstream blockers (`tests/integration/`) |
 | **50 Documented Test Cases** | Detailed scenarios covering Installation, Project Management, Validation, Design, Results, Reporting, Error Handling, and Regression (`test_cases.csv` — **45 Passed, 2 Failed, 3 Blocked, 90.0% Pass Rate**) |
 | **105 Automated Pytest Tests** | Real Pytest suite across `tests/unit/`, `tests/functional/`, `tests/integration/`, `tests/ui_simulation/`, `tests/regression/` (`test_results.csv` exported from `reports/test_results/junit.xml` — **96 Passed, 9 XFailed upstream blockers with strict enforcement**) |
-| **13 Documented Defects Tracked** | 8 Open upstream defects/blockers in official application, and 5 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
+| **16 Documented Defects Tracked** | 8 Open upstream defects/blockers in official application, and 5 Verified regression-guarded defects with reproducible test evidence (`issues.csv`) |
 | **Interactive QA Dashboard** | Streamlit web application reading live CSV telemetry, dynamic KPIs, real-time Pytest subprocess runner, and reference calculation verifier (`app.py`) |
-| **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/qa.yml`) |
+| **Continuous Integration** | Multi-OS GitHub Actions workflow (Ubuntu + Windows, Python 3.11/3.12) executing single-pass JUnit/HTML reporting with strict failure exit codes (`.github/workflows/tests.yml`) |
 
 > **Official OsdagBridge Source Verification:**
 > All integration tests evaluate against the genuine official checkout of **[osdag-admin/OsdagBridge](https://github.com/osdag-admin/OsdagBridge)** at **Commit `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`** (`Refactor`).
@@ -62,7 +62,7 @@ The project demonstrates end-to-end QA capabilities expected of a **Software Tes
       |                       Defect Tracking & Reports                         |
       | - test_cases.csv   (50 manual scenarios: 45 Pass, 2 Fail, 3 Blocked)    |
       | - test_results.csv (105 automated test executions: 96 Pass, 9 XFail)    |
-      | - issues.csv       (13 documented defects with reproducible evidence)   |
+      | - issues.csv       (16 documented defects with reproducible evidence)   |
       | - UI Wireframe mockups (reports/screenshots/*.svg)                      |
       +-------------------------------------------------------------------------+
                         |
@@ -238,9 +238,9 @@ The test matrix in `test_cases.csv` and `reports/test_results.csv` tracks 50 sce
 
 ---
 
-## 🐞 Defect Register (13 Documented Defects)
+## 🐞 Defect Register (16 Documented Defects)
 
-Tracked in `issues.csv` — detailing 8 open upstream defects alongside 5 verified regression guards:
+Tracked in `issues.csv` — 11 open official-application findings and 5 regression records scoped to the independent QA utility:
 
 | Bug ID | Title | Scope | Severity | Status | Verification & Evidence |
 |:---|:---|:---:|:---:|:---:|:---|
@@ -257,8 +257,19 @@ Tracked in `issues.csv` — detailing 8 open upstream defects alongside 5 verifi
 | **OB-BUG-011** | `to_si` helper is a dummy function returning input without metric conversion | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_units_conversion_metric` |
 | **OB-BUG-012** | `get_vehicle_loads()` in `irc6_2017.py` returns empty list instead of IRC:6 vehicles | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_code_irc6_vehicle_loads_populated` |
 | **OB-BUG-013** | `export_step` writes plain text string instead of ISO-10303-21 STEP structure | Official App | High | Open | `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_cad_export_iso_step_format` |
+| **OB-BUG-014** | Official validation accepts negative span | Official App | High | Open | `tests/integration/test_official_application.py::test_repro_ob_bug_014_official_validation_accepts_negative_span` |
+| **OB-BUG-015** | Plate-girder designer returns placeholder output | Official App | Critical | Open | `tests/integration/test_plate_girder_pipeline.py` |
+| **OB-BUG-016** | Plate-girder analyser returns placeholder output | Official App | Critical | Open | `tests/integration/test_plate_girder_pipeline.py` |
 
 ---
+
+## Evidence and scope limitations
+
+- The 50-row manual scenario matrix is separate from automated Pytest results.
+- SVGs in `reports/screenshots/` are wireframes/mockups, not screenshots from the official desktop application.
+- UI simulation tests do not prove that the official Qt desktop GUI works.
+- `osdagbridge_core` is an independent QA reference utility, not the official OsdagBridge calculation engine.
+- Open official-application defects remain upstream blockers.
 
 ## 📊 Interactive QA Dashboard
 
@@ -291,7 +302,7 @@ streamlit run app.py
 
 ## ⚙️ Continuous Integration
 
-`.github/workflows/qa.yml` executes on every push and pull request across a multi-OS matrix:
+`.github/workflows/tests.yml` executes on every push and pull request across a multi-OS matrix:
 - **Operating Systems:** `ubuntu-latest`, `windows-latest`
 - **Python Runtimes:** `3.11`, `3.12`
 - **Steps:** Checkouts, dependency installation, official source validation, JUnit XML and HTML report generation, and artifact archiving.
