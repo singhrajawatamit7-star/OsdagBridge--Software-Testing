@@ -1,82 +1,43 @@
 # Test Execution Report: OsdagBridge QA Suite
+
 **Report Reference:** OB-QA-TER-001  
-**Execution Timestamp:** 2026-11-21 20:15:00 UTC  
-**Environment:** Windows 11 (64-bit), Python 3.13.7, Pytest 9.2.0  
-**Application Build:** OsdagBridge v0.1.0 (Official GitHub checkout at commit `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`)  
+**Historical result snapshot:** 2026-11-21 14:59:50 UTC  
+**Recorded environment:** Windows 11, Python 3.13.7, Pytest 9.2.0  
+**Official checkout:** `2cb7ddc8ab2d2e33bf86721cb8a219b82d02df74`  
+**Important:** The results below are historical. A fresh CI run is required after this commit; these values are not a result for the current changes.
 
----
+## 1. Recorded automated results
+The committed CSV contains 105 records: 96 PASS and 9 XFAIL. The nine XFAIL statuses were normalized from the committed result reasons for known upstream blockers; this status correction is not a new test run.
+| Outcome | Count |
+|---|---:|
+| PASS | 96 |
+| XFAIL | 9 |
+| SKIPPED | 0 |
+| FAIL / ERROR | 0 |
+| Total | 105 |
 
-### 1.0 Executive Summary
+The previous CI run for commit `360dd0ccdc8ae5ddea5c3b326a682c29c78eb443` completed all four jobs (Ubuntu/Windows × Python 3.11/3.12). This does not verify the current patch.
 
-The automated QA suite executed **105 structured Pytest tests** and tracks **50 documented manual scenarios** across 8 testing categories. Testing verified both official OsdagBridge modules (`osdagbridge.core`, `osdagbridge.desktop`, `osdagbridge.cli`, `osdagbridge.core.bridge_types.plate_girder`) and the independent structural verification rule engine (`osdagbridge_core`).
+## 2. Test scope
+- `tests/unit/`: QA utility, validation, conversions and exporter.
+- `tests/functional/`: independent reference-utility workflows and engineering-rule checks.
+- `tests/integration/`: selected official source-file checks and documented upstream blockers.
+- `tests/regression/`: regression checks scoped to independent `osdagbridge_core`.
+- `tests/ui_simulation/`: UI-state simulation, not live desktop GUI automation.
+A smoke test that confirms a stub's output does not establish that the intended application feature works.
 
-- **Total Automated Pytest Tests:** 105
-- **Automated Tests Passed:** 96 (91.4%)
-- **Automated Upstream Blockers (Strict XFail):** 9 (8.6%)
-- **Automated Tests Failed / Errors:** 0 (0.0%, Exit Code 0)
-- **Manual Verification Matrix:** 50 Scenarios (45 Passed, 2 Failed, 3 Blocked — 90.0% Pass Rate)
-- **Documented Defects Tracked:** 13 Defects (`OB-BUG-001` through `OB-BUG-013`)
-- **Overall Quality Rating:** **CONDITIONALLY VERIFIED — QA SUITE PASSING; UPSTREAM APPLICATION DEFECTS STRICTLY ISOLATED & LOGGED**
+## 3. Generate a fresh report
+```bash
+python -m pytest tests -v --tb=short --junitxml=reports/test_results/junit.xml --html=reports/test_results/test_report.html --self-contained-html
+python scripts/export_junit_csv.py reports/test_results/junit.xml test_results.csv --strict
+```
+The exporter maps `type=pytest.xfail` to XFAIL and ordinary skips to SKIPPED.
 
----
+## 4. Separate manual scenario matrix
+The separate `reports/test_results.csv` contains 50 documented scenarios: 45 PASS, 2 FAIL and 3 BLOCKED. These recorded statuses are not the automated Pytest results. SVG files under `reports/screenshots/` are wireframes/mockups, not genuine screenshots of the official desktop application.
 
-### 2.0 Manual Test Execution Breakdown (50 Scenarios in `test_cases.csv`)
+## 5. Defect scope
+OB-BUG-001 through OB-BUG-003 and OB-BUG-008 through OB-BUG-016 are documented official-application findings and remain open upstream. OB-BUG-004 through OB-BUG-007 are scoped to the independent QA reference utility. Defect reproduction tests confirm observed behavior; they do not repair the official application.
 
-| Category | Planned Cases | Executed | Passed | Failed | Blocked | Pass Rate |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **1. Installation & Launch** | 5 | 5 | 3 | 1 | 1 | 60.0% |
-| **2. Project Management** | 5 | 5 | 5 | 0 | 0 | 100.0% |
-| **3. Input Validation** | 10 | 10 | 10 | 0 | 0 | 100.0% |
-| **4. Design Execution** | 8 | 8 | 5 | 1 | 2 | 62.5% |
-| **5. Results & Visualization**| 7 | 7 | 7 | 0 | 0 | 100.0% |
-| **6. Report Generation** | 5 | 5 | 5 | 0 | 0 | 100.0% |
-| **7. Error Handling** | 5 | 5 | 5 | 0 | 0 | 100.0% |
-| **8. Regression Testing** | 5 | 5 | 5 | 0 | 0 | 100.0% |
-| **Total** | **50** | **50** | **45** | **2** | **3** | **90.0%** |
-
-*(Pass rate calculation: $45 / 50 = 90.0\%$; the 2 failures and 3 blocked scenarios correspond directly to upstream official blockers).*
-
----
-
-### 3.0 Automated Pytest Suite Breakdown (105 Tests)
-
-| Test Module | Suite Focus | Total Tests | Passed | Strict XFail | Exit Code |
-| :--- | :--- | :---: | :---: | :---: | :---: |
-| `tests/functional/test_e2e_workflow.py` | Complete end-to-end design pipeline | 1 | 1 | 0 | 0 |
-| `tests/functional/test_irc_standards.py` | IRC:6 loads, IRC:24 deflection & corrosion | 4 | 4 | 0 | 0 |
-| `tests/integration/test_official_application.py` | Official CLI, units, validation, desktop | 15 | 10 | 5 | 0 |
-| `tests/integration/test_plate_girder_pipeline.py` | Official plate girder modules & blockers | 10 | 6 | 4 | 0 |
-| `tests/unit/test_unit_conversions.py` | Length, force, moment metric conversions | 6 | 6 | 0 | 0 |
-| `tests/unit/test_export_junit_csv.py` | JUnit XML to CSV exporter verification | 3 | 3 | 0 | 0 |
-| `tests/unit/test_upstream_scenarios.py` | Scenarios 43-48 (null inputs, load scaling, reload) | 6 | 6 | 0 | 0 |
-| `tests/unit/test_models.py` | QA reference bridge models | 4 | 4 | 0 | 0 |
-| `tests/unit/test_validation.py` | Boundary limit state checks | 12 | 12 | 0 | 0 |
-| `tests/test_design.py` | Structural capacity calculations | 7 | 7 | 0 | 0 |
-| `tests/test_inputs.py` | Comprehensive input verification | 11 | 11 | 0 | 0 |
-| `tests/test_project.py` | Serialization round-trip | 5 | 5 | 0 | 0 |
-| `tests/test_reports.py` | Markdown & HTML generation | 3 | 3 | 0 | 0 |
-| `tests/test_environment.py` | Python & path environment checks | 5 | 5 | 0 | 0 |
-| `tests/test_repository_layout.py` | Deliverables and CSV checks | 5 | 5 | 0 | 0 |
-| `tests/regression/test_regression.py` | Regression guards for OB-BUG-004..007 | 5 | 5 | 0 | 0 |
-| `tests/ui_simulation/test_ui_state_simulation.py` | Form workflow simulations | 3 | 3 | 0 | 0 |
-| **Total Automated Suite** | | **105** | **96** | **9** | **0** |
-
----
-
-### 4.0 Defect Verification Status (13 Documented Defects)
-
-| Bug ID | Title | Scope | Severity | Status | Verification Reference & Reproducible Evidence |
-| :--- | :--- | :---: | :---: | :---: | :--- |
-| **OB-BUG-001** | Desktop launch missing `__main__.py` | Official App | Critical | Open | `tests/integration/test_official_application.py::test_official_desktop_missing_main_module_execution` |
-| **OB-BUG-002** | Desktop bootstrap console stub | Official App | High | Open | `tests/integration/test_official_application.py::test_official_desktop_launch_message_stub` |
-| **OB-BUG-003** | Preliminary sizing string return | Official App | High | Open | `tests/integration/test_plate_girder_pipeline.py::test_preliminary_sizing_upstream_defect_reproduction_ob_bug_003` |
-| **OB-BUG-004** | Zero web thickness division by zero | QA Core | High | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_004_zero_web_thickness_division_guard` |
-| **OB-BUG-005** | Alphabetic character injection | QA Core | Medium | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_005_alpha_characters_handling` |
-| **OB-BUG-006** | Unicode destination path export failure | QA Core | Low | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_006_unicode_path_in_reports` |
-| **OB-BUG-007** | Impact factor floor violation for L > 45m | QA Core | Medium | Verified | `tests/regression/test_regression.py::test_regression_ob_bug_007_impact_factor_clamping_for_large_spans` |
-| **OB-BUG-008** | Missing `models.py` in `osdagbridge.core` | Official App | Critical | Open | `tests/integration/test_plate_girder_pipeline.py::test_official_core_import_blocked_by_missing_models` |
-| **OB-BUG-009** | CLI `analyze_cmd` console print stub | Official App | High | Open | `tests/integration/test_official_application.py::test_official_cli_analyze_produces_engineering_results` |
-| **OB-BUG-010** | Desktop `start()` lacks Qt initialization | Official App | High | Open | `tests/integration/test_official_application.py::test_official_desktop_gui_window_instantiation` |
-| **OB-BUG-011** | `to_si` helper fails metric conversion | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_units_conversion_metric` |
-| **OB-BUG-012** | `get_vehicle_loads()` returns empty list | Official App | Medium | Open | `tests/integration/test_official_application.py::test_official_code_irc6_vehicle_loads_populated` |
-| **OB-BUG-013** | `export_step` writes plain text string | Official App | High | Open | `tests/integration/test_plate_girder_pipeline.py::test_plate_girder_cad_export_iso_step_format` |
+## 6. CI and conclusion
+See [GitHub Actions](https://github.com/singhrajawatamit7-star/OsdagBridge--Software-Testing/actions). A new successful run is required before using this as final post-change evidence. The repository is a QA portfolio, not proof that all OsdagBridge features are operational.
