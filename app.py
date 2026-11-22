@@ -42,7 +42,7 @@ from osdagbridge_core.report_generator import ReportGenerator
 # File paths
 TEST_CASES_CSV = APP_DIR / "test_cases.csv"
 TEST_RESULTS_CSV = APP_DIR / "test_results.csv"
-REPORTS_TEST_RESULTS_CSV = APP_DIR / "reports" / "test_results.csv"
+REPORTS_TEST_RESULTS_CSV = APP_DIR / "reports" / "test_results.csv"  # Manual scenario execution matrix
 ISSUES_CSV = APP_DIR / "issues.csv"
 SCREENSHOTS_DIR = APP_DIR / "reports" / "screenshots"
 LOGS_FILE = APP_DIR / "reports" / "logs" / "osdagbridge_qa.log"
@@ -204,6 +204,7 @@ if nav == "📊 QA Executive Dashboard":
         failed_cases = 0
         error_cases = 0
         skipped_cases = 0
+        xfailed_cases = 0
         total_executed = 0
         pass_rate = 0.0
     else:
@@ -211,10 +212,11 @@ if nav == "📊 QA Executive Dashboard":
         failed_cases = int((df_results["Status"] == "FAIL").sum())
         error_cases = int((df_results["Status"] == "ERROR").sum())
         skipped_cases = int((df_results["Status"] == "SKIPPED").sum())
+        xfailed_cases = int((df_results["Status"] == "XFAIL").sum())
         total_executed = len(df_results)
         pass_rate = (passed_cases / total_executed * 100.0) if total_executed > 0 else 0.0
     total_bugs = len(df_issues)
-    total_automated_tests = len(df_results) if not df_results.empty else 76
+    total_automated_tests = len(df_results)
 
     c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
     with c1:
@@ -228,7 +230,8 @@ if nav == "📊 QA Executive Dashboard":
     with c5:
         st.metric("Failed/Errors", f"{failed_cases + error_cases} ❌")
     with c6:
-        st.metric("Skipped/XFail", f"{skipped_cases} ⚠️")
+        st.metric("Expected failures (XFAIL)", f"{xfailed_cases} ⚠️")
+        st.metric("Skipped", skipped_cases)
     with c7:
         st.metric("Pass Rate", f"{pass_rate:.1f}%")
 
