@@ -218,7 +218,7 @@ if nav == "📊 QA Executive Dashboard":
     total_bugs = len(df_issues)
     total_automated_tests = len(df_results)
 
-    c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
+    c1, c2, c3, c4, c5, c6, c7, c8 = st.columns(8)
     with c1:
         st.metric("Test Scenarios", total_cases)
     with c2:
@@ -231,8 +231,9 @@ if nav == "📊 QA Executive Dashboard":
         st.metric("Failed/Errors", f"{failed_cases + error_cases} ❌")
     with c6:
         st.metric("Expected failures (XFAIL)", f"{xfailed_cases} ⚠️")
-        st.metric("Skipped", skipped_cases)
     with c7:
+        st.metric("Skipped", skipped_cases)
+    with c8:
         st.metric("Pass Rate", f"{pass_rate:.1f}%")
 
     st.markdown("---")
