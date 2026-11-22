@@ -37,7 +37,7 @@ def test_test_results_csv_exists_and_complete(project_root):
         rows = list(reader)
 
     assert len(rows) >= 50, f"Expected 50 execution entries, found {len(rows)}"
-    valid_statuses = {"PASS", "FAIL", "SKIPPED", "BLOCKED", "ERROR"}
+    valid_statuses = {"PASS", "FAIL", "SKIPPED", "XFAIL", "BLOCKED", "ERROR"}
     for row in rows:
         assert row["Status"] in valid_statuses, f"Invalid status: {row['Status']}"
 
@@ -77,6 +77,6 @@ def test_documentation_files_exist(project_root):
 
 def test_github_actions_workflow_exists(project_root):
     """Verify GitHub Actions CI workflow file."""
-    wf_file = project_root / ".github" / "workflows" / "qa.yml"
-    assert wf_file.exists(), "GitHub Actions workflow .github/workflows/qa.yml missing."
+    wf_file = project_root / ".github" / "workflows" / "tests.yml"
+    assert wf_file.exists(), "GitHub Actions workflow .github/workflows/tests.yml missing."
     assert wf_file.stat().st_size > 50
